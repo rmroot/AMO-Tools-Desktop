@@ -3,6 +3,8 @@ import { Directory } from '../shared/models/directory';
 import { Assessment } from '../shared/models/assessment';
 import { AssessmentService } from '../assessment/assessment.service';
 declare const packageJson;
+
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',

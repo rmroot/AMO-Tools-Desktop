@@ -4,9 +4,8 @@
 		 (directoryChange)="changeDirectory($event)" [isChecked]="isChecked">
 		</app-directory-list-item>
 	</div>
-	<div class="list-item" *ngFor="let assessment of directory.assessments;">
-		<app-assessment-list-item [dragula]="'bag-one'" [dragulaOptions]="assessmentOptions" id="{{'assessment_'+assessment.id}}" [assessment]="assessment"
-		 [isChecked]="isChecked">
+	<div class="list-item" [dragula]="'bag-one'" [dragulaOptions]="assessmentOptions" *ngFor="let assessment of directory.assessments;">
+		<app-assessment-list-item id="{{'assessment_'+assessment.id}}" [assessment]="assessment" [isChecked]="isChecked">
 		</app-assessment-list-item>
 	</div>
 </div>

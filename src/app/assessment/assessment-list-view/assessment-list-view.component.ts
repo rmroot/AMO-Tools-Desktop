@@ -16,7 +16,9 @@ export class AssessmentListViewComponent implements OnInit {
   directoryChange = new EventEmitter();
   @Input()
   isChecked: boolean;
-
+  @Output('emitUpdateDirectory')
+  emitUpdateDirectory = new EventEmitter<boolean>();
+  
   folderOptions: any = {
     moves: () => { return false }
   };
@@ -62,10 +64,11 @@ export class AssessmentListViewComponent implements OnInit {
     let [assessment, directory] = args;
     let assessmentItemTest = assessment.id.indexOf('assessment_');
     let directoryItemTest = directory.id.indexOf('directory_');
-    console.log(assessmentItemTest);
-    console.log(directoryItemTest);
-    if (directoryItemTest == -1 && assessmentItemTest == -1) {
-      this.updateAssessment(assessment.id, directory.id);
+    if (directoryItemTest !== -1 && assessmentItemTest !== -1) {
+      let assId = assessment.id.replace('assessment_', '');
+      let dirId = directory.id.replace('directory_', '');
+      debugger
+      this.updateAssessment(assId, dirId);
     }
   }
 
@@ -89,10 +92,8 @@ export class AssessmentListViewComponent implements OnInit {
       if (assessment) {
         assessment.directoryId = dirId;
         this.indexedDbService.putAssessment(assessment).then(results => {
-          console.log(results)
-          this.directoryChange.emit(this.directory);
+          this.emitUpdateDirectory.emit(true);
         });
-
       }
     })
   }
