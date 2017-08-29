@@ -61,15 +61,22 @@ export class AssessmentListViewComponent implements OnInit {
   }
 
   onDrop(args) {
-    let [assessment, directory] = args;
-    let assessmentItemTest = assessment.id.indexOf('assessment_');
-    let directoryItemTest = directory.id.indexOf('directory_');
-    if (directoryItemTest !== -1 && assessmentItemTest !== -1) {
-      let assId = assessment.id.replace('assessment_', '');
-      let dirId = directory.id.replace('directory_', '');
-      debugger
+    let [item, target] = args;
+    let itemTest = item.id.indexOf('assessment_');
+    let targetTest = target.id.indexOf('directory_');
+    if (itemTest !== -1 && targetTest !== -1) {
+      let assId = item.id.replace('assessment_', '');
+      let dirId = target.id.replace('directory_', '');
       this.updateAssessment(assId, dirId);
     }
+    // else{
+    //   itemTest = item.id.indexOf('directory_');
+    //   if(itemTest !== -1 && targetTest !== -1){
+    //     let itemDirId = item.id.replace('directory_', '');
+    //     let perentDirId = target.id.replace('directory_', '');
+    //     this.updateDirectory(perentDirId, itemDirId);
+    //   }
+    // }
   }
 
   onOver(args) {
@@ -81,8 +88,13 @@ export class AssessmentListViewComponent implements OnInit {
   }
 
 
-  getTargetDirectory(assessmentId: string, directoryId: string) {
-
+  updateDirectory(parentId: string, directoryId: string) {
+    let pId: number = parseInt(parentId);
+    let dId: number = parseInt(directoryId);
+    this.indexedDbService.getDirectory(dId).then((resultDir: Directory) => {
+      resultDir.parentDirectoryId = pId;
+      this.indexedDbService.putDirectory(resultDir).then(results => {})
+    })
   }
 
   updateAssessment(assessmentId: string, directoryId: string) {
