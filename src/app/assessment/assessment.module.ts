@@ -22,7 +22,7 @@ import { SettingsModule } from '../settings/settings.module';
 import { ToastyModule } from 'ng2-toasty';
 
 import { ImportExportModule } from '../shared/import-export/import-export.module';
-
+import { DragulaModule } from 'ng2-dragula';
 @NgModule({
   declarations: [
     AssessmentDashboardComponent,
@@ -53,7 +53,8 @@ import { ImportExportModule } from '../shared/import-export/import-export.module
     IndexedDbModule,
     SettingsModule,
     ToastyModule,
-    ImportExportModule
+    ImportExportModule,
+    DragulaModule
   ],
   providers: []
 })
