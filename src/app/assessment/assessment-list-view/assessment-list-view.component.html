@@ -1,10 +1,10 @@
 <div class="list-view">
 	<div class="list-item" *ngFor="let directory of directory.subDirectory;">
-		<app-directory-list-item [dragula]="'bag-one'" [dragulaOptions]="directoryOptions" id="{{'directory_'+directory.id}}" [directory]="directory"
+		<app-directory-list-item [dragula]="'bag-one'" id="{{'directory_'+directory.id}}" [directory]="directory"
 		 (directoryChange)="changeDirectory($event)" [isChecked]="isChecked">
 		</app-directory-list-item>
 	</div>
-	<div class="list-item" [dragula]="'bag-one'" [dragulaOptions]="assessmentOptions" *ngFor="let assessment of directory.assessments;">
+	<div class="list-item" [dragula]="'bag-one'" *ngFor="let assessment of directory.assessments;">
 		<app-assessment-list-item id="{{'assessment_'+assessment.id}}" [assessment]="assessment" [isChecked]="isChecked">
 		</app-assessment-list-item>
 	</div>

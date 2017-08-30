@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ToastyModule } from 'ng2-toasty';
+import { DragulaModule } from 'ng2-dragula';
 
 import { NgxElectronModule } from 'ngx-electron';
 import { AssessmentModule } from '../assessment/assessment.module';
@@ -61,7 +62,8 @@ import { ContactPageComponent } from '../contact-page/contact-page.component';
     ToastyModule.forRoot(),
     JsonToCsvModule,
     SuiteDbModule,
-    ImportExportModule
+    ImportExportModule,
+    DragulaModule
   ],
   providers: [
     AssessmentService
