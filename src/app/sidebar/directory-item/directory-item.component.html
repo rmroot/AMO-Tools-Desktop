@@ -6,14 +6,13 @@
     </span>
   </li>
   <li class="sub-directory" *ngIf="directory.subDirectory && directory.collapsed == false">
-    <span *ngFor="let directory of directory.subDirectory">
-      <app-directory-item [dragula]="'bag-one'" id="{{'directory_'+directory.id}}" [directory]="directory" [selectedDirectoryId]="selectedDirectoryId" (selectSignal)="toggleSelected($event)"
-      (collapseSignal)="toggleDirectoryCollapse($event)" [dashboardView]="dashboardView"></app-directory-item>
-    </span>
+    <app-directory-item *ngFor="let directory of directory.subDirectory" [dragula]="'bag-two'" id="{{'directory_'+directory.id}}"
+      [directory]="directory" [selectedDirectoryId]="selectedDirectoryId" (selectSignal)="toggleSelected($event)" (collapseSignal)="toggleDirectoryCollapse($event)"
+      [dashboardView]="dashboardView"></app-directory-item>
     <ul>
       <li class="assessments" *ngIf="directory.assessments && directory.collapsed == false">
         <ul>
-          <li [dragula]="'bag-one'" *ngFor="let assessment of directory.assessments">
+          <li [dragula]="'bag-two'" *ngFor="let assessment of directory.assessments">
             <app-assessment-item id="{{'assessment_'+assessment.id}}" [assessment]="assessment"></app-assessment-item>
           </li>
         </ul>

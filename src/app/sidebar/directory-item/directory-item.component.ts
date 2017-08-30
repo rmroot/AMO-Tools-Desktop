@@ -47,14 +47,14 @@ export class DirectoryItemComponent implements OnInit {
       //console.log(`drop: ${value[0]}`);
       this.onDrop(value.slice(1));
     });
-    dragulaService.over.subscribe((value) => {
-      // console.log(`over: ${value[0]}`);
-      this.onOver(value.slice(1));
-    });
-    dragulaService.out.subscribe((value) => {
-      //  console.log(`out: ${value[0]}`);
-      this.onOut(value.slice(1));
-    });
+    // dragulaService.over.subscribe((value) => {
+    //   // console.log(`over: ${value[0]}`);
+    //   this.onOver(value.slice(1));
+    // });
+    // dragulaService.out.subscribe((value) => {
+    //   //  console.log(`out: ${value[0]}`);
+    //   this.onOut(value.slice(1));
+    // });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -113,7 +113,6 @@ export class DirectoryItemComponent implements OnInit {
     let [item, target] = args;
     let itemTest = item.id.indexOf('assessment_');
     let targetTest = target.id.indexOf('directory_');
-    debugger
     if (itemTest !== -1 && targetTest !== -1) {
       let assId = item.id.replace('assessment_', '');
       let dirId = target.id.replace('directory_', '');
@@ -155,7 +154,8 @@ export class DirectoryItemComponent implements OnInit {
         assessment.directoryId = dirId;
         this.indexedDbService.putAssessment(assessment).then(results => {
           //this.emitUpdateDirectory.emit(true);
-          this.populateDirectories(this.directory);
+          console.log('put')
+          this.populateDirectories(this.directory, false);
         });
       }
     })
