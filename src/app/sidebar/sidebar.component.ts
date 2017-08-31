@@ -33,6 +33,8 @@ export class SidebarComponent implements OnInit {
   emitGoToSettings = new EventEmitter<boolean>();
   @Output('emitGoToContact')
   emitGoToContact = new EventEmitter<boolean>();
+  @Output('emitGoToSubstances')
+  emitGoToSubstances = new EventEmitter<boolean>();
   
   selectedDirectoryId: number;
   firstChange: boolean = true;
@@ -112,5 +114,9 @@ export class SidebarComponent implements OnInit {
 
   showContact(){
     this.emitGoToContact.emit(true);
+  }
+
+  goToSubstances(){
+    this.emitGoToSubstances.emit(true);
   }
 }

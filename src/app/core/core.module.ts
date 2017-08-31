@@ -32,6 +32,8 @@ import { LandingScreenComponent } from '../landing-screen/landing-screen.compone
 import { AboutPageComponent } from '../about-page/about-page.component';
 import { TutorialsComponent } from '../tutorials/tutorials.component';
 import { ContactPageComponent } from '../contact-page/contact-page.component';
+import { SubstanceManagementModule } from '../substance-management/substance-management.module';
+
 @NgModule({
   declarations: [
     CoreComponent,
@@ -58,10 +60,11 @@ import { ContactPageComponent } from '../contact-page/contact-page.component';
     FormsModule,
     ReactiveFormsModule,
     SettingsModule,
-    ToastyModule.forRoot(),
+    ToastyModule,
     JsonToCsvModule,
     SuiteDbModule,
-    ImportExportModule
+    ImportExportModule,
+    SubstanceManagementModule
   ],
   providers: [
     AssessmentService
