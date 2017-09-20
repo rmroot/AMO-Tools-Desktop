@@ -20,6 +20,7 @@ import { ExtendedSurface } from '../shared/models/phast/losses/extendedSurface';
 import { OtherLoss } from '../shared/models/phast/losses/otherLoss';
 import { EnergyInputExhaustGasLoss } from '../shared/models/phast/losses/energyInputExhaustGasLosses';
 declare var phastAddon: any;
+declare var exhaustGasAddon: any;
 import { BehaviorSubject } from 'rxjs';
 import { ConvertUnitsService } from '../shared/convert-units/convert-units.service';
 import { Settings } from '../shared/models/settings';
@@ -396,7 +397,11 @@ export class PhastService {
         results = 0;
       }
     } else {
-      results = phastAddon.exhaustGasEAF(inputs);
+      // results = phastAddon.exhaustGasEAF(inputs);
+      const obj = new exhaustGasAddon.ExhaustGasEAF(inputs.offGasTemp, inputs.CO, inputs.H2, inputs.combustibleGases,
+                                                inputs.vfr, inputs.dustLoading);
+      results = obj.getTotalHeatExhaustNAN();
+      // results = phastAddon.exhaustGasEAF(inputs);
     }
     return results;
   }
