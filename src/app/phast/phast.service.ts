@@ -397,11 +397,15 @@ export class PhastService {
         results = 0;
       }
     } else {
-      // results = phastAddon.exhaustGasEAF(inputs);
       const obj = new exhaustGasAddon.ExhaustGasEAF(inputs.offGasTemp, inputs.CO, inputs.H2, inputs.combustibleGases,
                                                 inputs.vfr, inputs.dustLoading);
-      results = obj.getTotalHeatExhaustNAN();
-      // results = phastAddon.exhaustGasEAF(inputs);
+      results = obj.totalHeatExhaust;
+      console.log(obj.totalHeatExhaust);
+      // just as an example, you can change any variable and the calculations are re-run automatically
+      obj.offGasTemp = results + 1000;
+      console.log(obj.totalHeatExhaust);
+      obj.offGasTemp = inputs.offGasTemp;
+      results = obj.totalHeatExhaust;
     }
     return results;
   }
