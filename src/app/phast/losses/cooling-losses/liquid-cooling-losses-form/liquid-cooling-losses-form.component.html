@@ -5,7 +5,7 @@
       <label class="small" for="avgSpecificHeat">Average Specific Heat</label>
       <div class="input-group">
         <input name="{{'avgSpecificHeat_'+lossIndex}}" type="number" step="any" class="form-control" formControlName="avgSpecificHeat"
-          id="avgSpecificHeat" onfocus="this.select();" (input)="startSavePolling()" (focus)="focusField('avgSpecificHeat')">
+          id="avgSpecificHeat" onfocus="this.select();" (input)="startSavePolling()" (focus)="focusField('avgSpecificHeatLiquid')">
         <span *ngIf="settings.unitsOfMeasure == 'Imperial'" class="input-group-addon units">Btu/(lb-&#8457;)</span>
         <span *ngIf="settings.unitsOfMeasure == 'Metric'" class="input-group-addon units">kJ/(kg-&#8451;)</span>
       </div>
@@ -16,8 +16,8 @@
       <div class="input-group">
         <input name="{{'density_'+lossIndex}}" type="number" step="any" class="form-control" formControlName="density" id="density"
           onfocus="this.select();" (input)="startSavePolling()" (focus)="focusField('density')">
-        <span *ngIf="settings.unitsOfMeasure == 'Imperial'" class="input-group-addon units">lb/SCF</span>
-        <span *ngIf="settings.unitsOfMeasure == 'Metric'" class="input-group-addon units">kg/Nm<sup>3</sup></span>
+        <span *ngIf="settings.unitsOfMeasure == 'Imperial'" class="input-group-addon units">lb/gal</span>
+        <span *ngIf="settings.unitsOfMeasure == 'Metric'" class="input-group-addon units">kg/L</span>
       </div>
     </div>
 

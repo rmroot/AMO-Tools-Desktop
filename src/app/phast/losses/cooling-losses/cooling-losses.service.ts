@@ -54,11 +54,11 @@ export class CoolingLossesService {
   initLiquidCoolingForm() {
     return this.formBuilder.group({
       'avgSpecificHeat': [1, Validators.required],
-      'density': [62.35013, Validators.required],
+      'density': [8.338, Validators.required],
       'liquidFlow': ['', Validators.required],
       'inletTemp': ['', Validators.required],
       'outletTemp': ['', Validators.required],
-      'correctionFactor': ['', Validators.required],
+      'correctionFactor': [1, Validators.required],
     });
   }
 
@@ -92,7 +92,7 @@ export class CoolingLossesService {
       'inletTemp': ['', Validators.required],
       'outletTemp': ['', Validators.required],
       'correctionFactor': ['', Validators.required],
-      'gasDensity': ['',Validators.required]
+      'gasDensity': [0.074887, Validators.required]
     });
   }
 

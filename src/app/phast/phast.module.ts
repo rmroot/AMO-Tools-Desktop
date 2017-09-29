@@ -21,6 +21,8 @@ import { SystemSetupComponent } from './system-setup/system-setup.component';
 import { SettingsModule } from '../settings/settings.module';
 import { AuxEquipmentModule } from './aux-equipment/aux-equipment.module';
 import { SankeyModule } from './sankey/sankey.module';
+import { PhastReportComponent } from './phast-report/phast-report.component';
+import { PhastDiagramComponent } from './phast-diagram/phast-diagram.component';
 @NgModule({
   declarations: [
     PhastComponent,
@@ -29,7 +31,9 @@ import { SankeyModule } from './sankey/sankey.module';
     SystemBasicsComponent,
     OperatingHoursComponent,
     HelpPanelComponent,
-    SystemSetupComponent
+    SystemSetupComponent,
+    PhastReportComponent,
+    PhastDiagramComponent
   ],
   exports: [
   ],
