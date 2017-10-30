@@ -74,9 +74,9 @@ export class SankeyService {
       unit = 'GJ/hr'
     }
 
-    let tmpNode = this.createNode("Input", results.totalInput, this.baseSize, 300, 200, 0, true, false, false, false, unit)
+    let tmpNode = this.createNode("Input", results.totalInput, this.baseSize, 300, 300, 0, true, false, false, false, unit)
     results.nodes.push(tmpNode);
-    tmpNode = this.createNode("inter1", 0, 0, 0, 350, 0, false, false, true, true, unit)
+    tmpNode = this.createNode("inter1", 0, 0, 0, 500, 0, false, false, true, true, unit)
     results.nodes.push(tmpNode);
     let interIndex = 2;
 
@@ -107,10 +107,10 @@ export class SankeyService {
       results.nodes.push(tmpNode);
       interIndex++;
     }
-    //end flue gas arrow  
+    //end flue gas arrow
     //Atmoshpere
     if (results.totalAtmosphereLoss) {
-      tmpNode = this.createNode("Atmosphere Losses", results.totalAtmosphereLoss, 0, 0, 100 + (250 * interIndex), 0, false, false, false, top, unit)
+      tmpNode = this.createNode("Atmosphere Losses", results.totalAtmosphereLoss, 0, 0, 150 + (250 * interIndex), 0, false, false, false, top, unit)
       results.nodes.push(tmpNode);
       tmpNode = this.createNode("inter" + interIndex, 0, 0, 0, 100 + (250 * interIndex), 0, false, false, true, !top, unit);
       results.nodes.push(tmpNode);
@@ -128,7 +128,7 @@ export class SankeyService {
     }
     //Cooling
     if (results.totalCoolingLoss) {
-      tmpNode = this.createNode("Water Cooling Losses", results.totalCoolingLoss, 0, 0, 100 + (250 * interIndex), 0, false, false, false, top, unit)
+      tmpNode = this.createNode("Water Cooling Losses", results.totalCoolingLoss, 0, 0, 50 + (250 * interIndex), 200, false, false, false, top, unit)
       results.nodes.push(tmpNode);
       tmpNode = this.createNode("inter" + interIndex, 0, 0, 0, 100 + (250 * interIndex), 0, false, false, true, !top, unit);
       results.nodes.push(tmpNode);
@@ -173,7 +173,7 @@ export class SankeyService {
     }
     //External Surface
     if (results.totalExtSurfaceLoss) {
-      tmpNode = this.createNode("External Surface Losses", results.totalExtSurfaceLoss, 0, 0, 100 + (250 * interIndex), 0, false, false, false, top, unit)
+      tmpNode = this.createNode("External Surface Losses", results.totalExtSurfaceLoss, 0, 0, 20 + (250 * interIndex), 0, false, false, false, top, unit)
       results.nodes.push(tmpNode);
       tmpNode = this.createNode("inter" + interIndex, 0, 0, 0, 100 + (250 * interIndex), 0, false, false, true, !top, unit);
       results.nodes.push(tmpNode);
