@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { PHAST, PhastResults, Losses, ShowResultsCategories } from '../shared/models/phast/phast';
+import { PHAST, PhastResults, Losses, ShowResultsCategories, CalculatedByPhast } from '../shared/models/phast/phast';
 import { PhastService } from './phast.service';
 import { Settings } from '../shared/models/settings';
-
+import { AuxEquipmentService } from './aux-equipment/aux-equipment.service';
 @Injectable()
 export class PhastResultsService {
 
-  constructor(private phastService: PhastService) { }
+  constructor(private phastService: PhastService, private auxEquipmentService: AuxEquipmentService) { }
   checkLoss(loss: any) {
     if (!loss) {
       return false;
@@ -45,7 +45,8 @@ export class PhastResultsService {
       flueGasGrossHeat: 0,
       flueGasAvailableHeat: 0,
       grossHeatInput: 0,
-      heatingSystemEfficiency: 0
+      heatingSystemEfficiency: 0,
+      availableHeatPercent: 0
     }
     return results;
   }
@@ -91,11 +92,20 @@ export class PhastResultsService {
     }
     if (resultCats.showExGas && this.checkLoss(phast.losses.exhaustGasEAF)) {
       results.totalExhaustGasEAF = this.phastService.sumExhaustGasEAF(phast.losses.exhaustGasEAF, settings);
+      results.grossHeatInput = results.totalInput + results.totalEnergyInputEAF - results.exothermicHeat;
     }
+    if (resultCats.showEnInput1 && this.checkLoss(phast.losses.energyInputEAF)) {
+      let tmpResults = this.phastService.energyInputEAF(phast.losses.energyInputEAF[0], settings);
+      results.energyInputTotalChemEnergy = tmpResults.totalChemicalEnergyInput;
+      results.energyInputHeatDelivered = tmpResults.heatDelivered;
+    }
+
     if (resultCats.showEnInput2 && this.checkLoss(phast.losses.energyInputExhaustGasLoss)) {
       let tmpResults = this.phastService.energyInputExhaustGasLosses(phast.losses.energyInputExhaustGasLoss[0], settings)
+      results.energyInputHeatDelivered = tmpResults.heatDelivered;
       results.totalExhaustGas = tmpResults.exhaustGasLosses;
       results.grossHeatInput = results.totalInput + results.totalExhaustGas - results.exothermicHeat;
+      results.availableHeatPercent = this.phastService.availableHeat(phast.losses.energyInputExhaustGasLoss[0], settings);
     }
     if (phast.systemEfficiency && resultCats.showSystemEff) {
       results.heatingSystemEfficiency = phast.systemEfficiency;
@@ -153,6 +163,21 @@ export class PhastResultsService {
       tmpResultCategories.showSystemEff = true;
     }
     return tmpResultCategories;
+  }
+
+  calculatedByPhast(phast: PHAST, settings: Settings) {
+    let sumFeedRate = this.phastService.sumChargeMaterialFeedRate(phast.losses.chargeMaterials);
+    let phastResults = this.getResults(phast, settings);
+    let calculatedFuelEnergyUsed = phastResults.grossHeatInput;
+    let calculatedEnergyIntensity = (calculatedFuelEnergyUsed / sumFeedRate) || 0;
+    let tmpAuxResults = this.auxEquipmentService.calculate(phast);
+    let calculatedElectricityUsed = this.auxEquipmentService.getResultsSum(tmpAuxResults);
+    let phastCalcs: CalculatedByPhast = {
+      fuelEnergyUsed: calculatedFuelEnergyUsed,
+      energyIntensity: calculatedEnergyIntensity,
+      electricityUsed: calculatedElectricityUsed
+    }
+    return phastCalcs;
   }
 
 }

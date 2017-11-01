@@ -27,10 +27,11 @@ export interface PHAST {
   designedEnergy?: DesignedEnergy,
   operatingHours?: OperatingHours,
   systemEfficiency?: number,
-  operatingCosts?: OperatingCosts
+  operatingCosts?: OperatingCosts,
+  implementationCost?: number
 }
 
-export interface OperatingCosts{
+export interface OperatingCosts {
   fuelCost?: number,
   steamCost?: number,
   electricityCost?: number
@@ -80,7 +81,8 @@ export interface Notes {
   auxiliaryPowerNotes?: string,
   exhaustGasNotes?: string,
   energyInputExhaustGasNotes?: string,
-  heatSystemEfficiencyNotes?: string
+  heatSystemEfficiencyNotes?: string,
+  operationsNotes?: string
 }
 
 export interface OperatingHours {
@@ -89,7 +91,8 @@ export interface OperatingHours {
   shiftsPerDay?: number,
   hoursPerShift?: number,
   hoursPerYear?: number,
-  isCalculated?: boolean
+  isCalculated?: boolean,
+  operatingConditions?: string
 }
 
 export interface PhastResults {
@@ -118,7 +121,8 @@ export interface PhastResults {
   flueGasGrossHeat: number,
   flueGasAvailableHeat: number,
   grossHeatInput: number,
-  heatingSystemEfficiency: number
+  heatingSystemEfficiency: number,
+  availableHeatPercent: number
 }
 
 export interface ShowResultsCategories {
@@ -140,4 +144,11 @@ export interface ExecutiveSummary {
   annualCostSavings?: number,
   implementationCosts?: number,
   paybackPeriod?: number
+}
+
+
+export interface CalculatedByPhast {
+  fuelEnergyUsed: number,
+  energyIntensity: number,
+  electricityUsed: number
 }
