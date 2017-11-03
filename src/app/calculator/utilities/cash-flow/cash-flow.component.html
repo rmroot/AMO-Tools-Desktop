@@ -14,7 +14,7 @@
       </ul>
       <div class="tab-content curve-results" id="pumpCurveGraph">
         <div *ngIf="tabSelect == 'results'">
-           <app-cash-flow-diagram [cashFlowResults]="cashFlowResults"></app-cash-flow-diagram>
+           <app-cash-flow-diagram [cashFlowResults]="cashFlowResults" [cashFlowForm]="cashFlowForm"></app-cash-flow-diagram>
         </div>
         <div *ngIf="tabSelect == 'help'" class="help-panel">
           <app-cash-flow-help [currentField]="currentField"></app-cash-flow-help>
