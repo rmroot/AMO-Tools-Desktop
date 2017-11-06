@@ -58,48 +58,41 @@ export class CashFlowDiagramComponent implements OnInit {
       return arr;
     }
 
+    let maxVals = {};
     let data = [
-      {value: -this.cashFlowForm.operationCost, fill: colors[5], dataset: "Year 1"},
-      {value: this.cashFlowForm.energySavings, fill: colors[7], dataset: "Year 1"},
-      {value: -this.cashFlowForm.fuelCost, fill: colors[1], dataset: "Year 1"},
-      {value: -this.cashFlowForm.installationCost, fill: colors[3], dataset: "Year 1"}
+      {value: -this.cashFlowForm.operationCost, fill: colors[5], year: "Year 1"},
+      {value: this.cashFlowForm.energySavings, fill: colors[7], year: "Year 1"},
+      {value: -this.cashFlowForm.fuelCost, fill: colors[1], year: "Year 1"},
+      {value: -this.cashFlowForm.installationCost, fill: colors[3], year: "Year 1"}
     ];
 
     partialSort(data, 0, 4);
     stackBars(data, 0, 3);
+    maxVals['Year 1'] = data[3].value;
 
     let index = 4;
     for (let i = 1; i < this.cashFlowForm.lifeYears - 1; i++) {
-      data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'Year ' + (i + 1)});
-      data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'Year ' + (i + 1)});
-      data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'Year ' + (i + 1)});
+      data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'year': 'Year ' + (i + 1)});
+      data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'year': 'Year ' + (i + 1)});
+      data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'year': 'Year ' + (i + 1)});
       partialSort(data, index, index + 3);
       stackBars(data, index, index + 2);
+      maxVals['Year ' + (i + 1)] = data[index + 2].value;
       index += 3;
     }
 
-    data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': this.cashFlowForm.salvageInput, 'fill': colors[6], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'year': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'year': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'year': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': this.cashFlowForm.salvageInput, 'fill': colors[6], 'year': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'year': 'Year ' + this.cashFlowForm.lifeYears});
     partialSort(data, index, index + 5);
     stackBars(data, index, index + 4);
     const tmp = data[data.length - 2].value;
     data[data.length - 2].value += data[data.length - 1].value;
     data[data.length - 1].value = tmp;
-
-
-    let maxVals = {};
-    for (let i = 0; i < data.length; i++) {
-      const key = data[i].dataset, val = data[i].value;
-      if (! (key in maxVals)) {
-        maxVals[key] = 0;
-      }
-      if (val > maxVals[key]) {
-        maxVals[key] = val;
-      }
-    }
+    maxVals['Year ' + this.cashFlowForm.lifeYears] = data[data.length - 2].value;
+    debugger
 
 // Add svg to
     let svg = d3.select('app-cash-flow-diagram').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -113,12 +106,11 @@ export class CashFlowDiagramComponent implements OnInit {
       .range([0, width]);
 
 // Scale the range of the data in the domains
-    debugger
     x.domain(d3.extent(data, function (d) {
       return d.value;
     }));
     y.domain(data.map(function (d) {
-      return d.dataset;
+      return d.year;
     }));
 
 // append the rectangles for the bar chart
@@ -132,7 +124,8 @@ export class CashFlowDiagramComponent implements OnInit {
         return x(Math.min(0, d.value));
       })
       .attr("y", function (d) {
-        return y(d.dataset);
+        console.log('adding year ' + d.year);
+        return y(d.year);
       })
       .attr("width", function (d) {
         return Math.abs(x(d.value) - x(0));
@@ -149,12 +142,18 @@ export class CashFlowDiagramComponent implements OnInit {
     let yAxisGroup = svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + x(0) + ",0)")
-      .call(d3.axisRight(y));
+      .call(d3.axisLeft(y));
+      // .call(d3.axisRight(y));
     yAxisGroup.selectAll('.tick')
       .data(data)
       .select('text')
-      .attr('x', function(d, i) { return d.value < 0 ? 9 : -9; })
-      .style('text-anchor', function(d, i) { return d.value < 0 ? 'start' : 'end'; })
+      // .attr('x', function(d, i) { return d.value < 0 ? 9 : -9; })
+      .attr('x', function(d, i) { return 5; })
+      .attr('fill', '#FFFFFF')
+      // .attr('x', function(d, i) { console.log(d.year + ' and val is ' + maxVals[d.year]); return maxVals[d.year] / 10; })
+      .style('text-anchor', function(d, i) { return 'start'; });
+      // .style('text-anchor', 'end');
+      // .style('text-anchor', function(d, i) { return d.value < 0 ? 'start' : 'end'; });
 
 
     // const data = [
