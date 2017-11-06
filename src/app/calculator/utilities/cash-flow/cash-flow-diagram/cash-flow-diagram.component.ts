@@ -26,7 +26,6 @@ export class CashFlowDiagramComponent implements OnInit {
   }
 
   makeGraph() {
-
     const margin = {top: 30, right: 10, bottom: 50, left: 50},
       width = 600,
       height = 400;
@@ -42,26 +41,53 @@ export class CashFlowDiagramComponent implements OnInit {
       '#1E7640'
     ];
 
+    const stackBars = (arr, start, end) => {
+      for (let index = end; index >= start; index--) {
+        if (arr[index].value > 0 || arr[index + 1].value > 0) {
+          continue;
+        }
+        arr[index].value = arr[index].value + arr[index + 1].value;
+      }
+    };
 
-    console.log(this.cashFlowForm);
-    let data = [
-      {value: -this.cashFlowForm.installationCost, fill: colors[3], dataset: "year 1"},
-      {value: -this.cashFlowForm.operationCost, fill: colors[5], dataset: "year 1"},
-      {value: -this.cashFlowForm.fuelCost, fill: colors[1], dataset: "year 1"},
-      {value: this.cashFlowForm.energySavings, fill: colors[7], dataset: "year 1"},
-    ];
-
-    for (let i = 1; i < this.cashFlowForm.lifeYears - 1; i++) {
-      data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'year ' + (i + 1)});
-      data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'year ' + (i + 1)});
-      data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'year ' + (i + 1)});
+    function partialSort(arr, start, end) {
+      let preSorted = arr.slice(0, start), postSorted = arr.slice(end);
+      let sorted = arr.slice(start, end).sort((a, b) => a.value - b.value);
+      arr.length = 0;
+      arr.push.apply(arr, preSorted.concat(sorted).concat(postSorted));
+      return arr;
     }
 
-    data.push({'value': this.cashFlowForm.salvageInput, 'fill': colors[6], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
-    data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+    let data = [
+      {value: -this.cashFlowForm.operationCost, fill: colors[5], dataset: "Year 1"},
+      {value: this.cashFlowForm.energySavings, fill: colors[7], dataset: "Year 1"},
+      {value: -this.cashFlowForm.fuelCost, fill: colors[1], dataset: "Year 1"},
+      {value: -this.cashFlowForm.installationCost, fill: colors[3], dataset: "Year 1"}
+    ];
+
+    partialSort(data, 0, 4);
+    stackBars(data, 0, 3);
+
+    let index = 4;
+    for (let i = 1; i < this.cashFlowForm.lifeYears - 1; i++) {
+      data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'Year ' + (i + 1)});
+      data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'Year ' + (i + 1)});
+      data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'Year ' + (i + 1)});
+      partialSort(data, index, index + 3);
+      stackBars(data, index, index + 2);
+      index += 3;
+    }
+
+    data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': this.cashFlowForm.salvageInput, 'fill': colors[6], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'dataset': 'Year ' + this.cashFlowForm.lifeYears});
+    partialSort(data, index, index + 5);
+    stackBars(data, index, index + 4);
+    const tmp = data[data.length - 2].value;
+    data[data.length - 2].value += data[data.length - 1].value;
+    data[data.length - 1].value = tmp;
 
 
     let maxVals = {};
@@ -87,6 +113,7 @@ export class CashFlowDiagramComponent implements OnInit {
       .range([0, width]);
 
 // Scale the range of the data in the domains
+    debugger
     x.domain(d3.extent(data, function (d) {
       return d.value;
     }));

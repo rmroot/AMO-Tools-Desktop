@@ -16,6 +16,8 @@ export class CashFlowComponent implements OnInit {
     payback: 0
   };
 
+  // toggleCalculate = true;
+
   tabSelect: string = 'results';
    constructor() { }
 
@@ -40,6 +42,7 @@ export class CashFlowComponent implements OnInit {
   }
 
   calculate() {
+    // this.toggleCalculate = !this.toggleCalculate;
   // Benefits/Cost Ratio
     this.cashFlowResults.results = ((this.cashFlowForm.energySavings * this.cashFlowForm.lifeYears) + this.cashFlowForm.salvageInput) /
     (((this.cashFlowForm.installationCost + this.cashFlowForm.disposal) + (this.cashFlowForm.operationCost + this.cashFlowForm.fuelCost)) * this.cashFlowForm.lifeYears);
