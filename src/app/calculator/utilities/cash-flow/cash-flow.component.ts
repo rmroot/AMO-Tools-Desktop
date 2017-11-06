@@ -27,8 +27,8 @@ export class CashFlowComponent implements OnInit {
       installationCost: 10000,
       operationCost: 500,
       fuelCost: 500,
-      junkCost: 500
-    }
+      disposal: 500
+    };
   }
 
   setTab(str: string) {
@@ -39,11 +39,10 @@ export class CashFlowComponent implements OnInit {
     this.currentField = str;
   }
 
-
   calculate() {
   // Benefits/Cost Ratio
     this.cashFlowResults.results = ((this.cashFlowForm.energySavings * this.cashFlowForm.lifeYears) + this.cashFlowForm.salvageInput) /
-    (((this.cashFlowForm.installationCost + this.cashFlowForm.junkCost) + (this.cashFlowForm.operationCost + this.cashFlowForm.fuelCost)) * this.cashFlowForm.lifeYears);
+    (((this.cashFlowForm.installationCost + this.cashFlowForm.disposal) + (this.cashFlowForm.operationCost + this.cashFlowForm.fuelCost)) * this.cashFlowForm.lifeYears);
     console.log(this.cashFlowResults.results);
   // Payback
     this.cashFlowResults.payback = (this.cashFlowForm.installationCost * 12) / this.cashFlowForm.energySavings;

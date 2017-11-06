@@ -5,7 +5,7 @@ export interface CashFlowForm {
   installationCost?: number,
   operationCost?: number,
   fuelCost?: number,
-  junkCost?: number
+  disposal?: number
 }
 
 export interface CashFlowResults {

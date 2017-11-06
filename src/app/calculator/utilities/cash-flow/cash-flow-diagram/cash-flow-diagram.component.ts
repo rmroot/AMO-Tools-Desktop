@@ -26,83 +26,179 @@ export class CashFlowDiagramComponent implements OnInit {
   }
 
   makeGraph() {
-    console.log("installation cost " + this.cashFlowForm.installationCost);
-    console.log("energy savings " + this.cashFlowForm.energySavings);
+
+    const margin = {top: 30, right: 10, bottom: 50, left: 50},
+      width = 600,
+      height = 400;
+
+    const colors = [
+      '#84B641',
+      '#948A54',
+      '#E1CD00',
+      '#A03123',
+      '#2ABDDA',
+      '#DE762D',
+      '#306DBE',
+      '#1E7640'
+    ];
+
+
+    console.log(this.cashFlowForm);
+    let data = [
+      {value: -this.cashFlowForm.installationCost, fill: colors[3], dataset: "year 1"},
+      {value: -this.cashFlowForm.operationCost, fill: colors[5], dataset: "year 1"},
+      {value: -this.cashFlowForm.fuelCost, fill: colors[1], dataset: "year 1"},
+      {value: this.cashFlowForm.energySavings, fill: colors[7], dataset: "year 1"},
+    ];
+
+    for (let i = 1; i < this.cashFlowForm.lifeYears - 1; i++) {
+      data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'year ' + (i + 1)});
+      data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'year ' + (i + 1)});
+      data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'year ' + (i + 1)});
+    }
+
+    data.push({'value': this.cashFlowForm.salvageInput, 'fill': colors[6], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.operationCost, 'fill': colors[5], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': this.cashFlowForm.energySavings, 'fill': colors[7], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+    data.push({'value': -this.cashFlowForm.fuelCost, 'fill': colors[1], 'dataset': 'year ' + this.cashFlowForm.lifeYears});
+
+
+    let maxVals = {};
+    for (let i = 0; i < data.length; i++) {
+      const key = data[i].dataset, val = data[i].value;
+      if (! (key in maxVals)) {
+        maxVals[key] = 0;
+      }
+      if (val > maxVals[key]) {
+        maxVals[key] = val;
+      }
+    }
+
+// Add svg to
+    let svg = d3.select('app-cash-flow-diagram').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+// set the ranges
+    const y = d3.scaleBand()
+      .range([height, 0])
+      .padding(0.1);
+
+    const x = d3.scaleLinear()
+      .range([0, width]);
+
+// Scale the range of the data in the domains
+    x.domain(d3.extent(data, function (d) {
+      return d.value;
+    }));
+    y.domain(data.map(function (d) {
+      return d.dataset;
+    }));
+
+// append the rectangles for the bar chart
+    svg.selectAll(".bar")
+      .data(data)
+      .enter().append("rect")
+      .attr("class", function (d) {
+        return "bar bar--" + (d.value < 0 ? "negative" : "positive");
+      })
+      .attr("x", function (d) {
+        return x(Math.min(0, d.value));
+      })
+      .attr("y", function (d) {
+        return y(d.dataset);
+      })
+      .attr("width", function (d) {
+        return Math.abs(x(d.value) - x(0));
+      })
+      .attr("fill", function(d) { return d.fill; })
+      .attr("height", y.bandwidth());
+
+// add the x Axis
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+// add the y Axis
+    let yAxisGroup = svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + x(0) + ",0)")
+      .call(d3.axisRight(y));
+    yAxisGroup.selectAll('.tick')
+      .data(data)
+      .select('text')
+      .attr('x', function(d, i) { return d.value < 0 ? 9 : -9; })
+      .style('text-anchor', function(d, i) { return d.value < 0 ? 'start' : 'end'; })
 
 
     // const data = [
-    //   {month: "Q1-2016", apples: 3840, bananas: 1920, cherries: -1960, dates: -400},
-    //   {month: "Q2-2016", apples: 1600, bananas: 1440, cherries: -960, dates: -400},
-    //   {month: "Q3-2016", apples:  640, bananas:  960, cherries: -640, dates: -600},
-    //   {month: "Q4-2016", apples:  320, bananas:  480, cherries: -640, dates: -400}
+    //   {month: "Q1-2016", apples: 10, bananas: 10, cherries: -10, dates: -10},
+    //   {month: "Q2-2016", apples: 1, bananas: 20, cherries: -20, dates: -20},
+    //   {month: "Q3-2016", apples:  1, bananas:  30, cherries: -30, dates: -30},
+    //   {month: "Q4-2016", apples:  1, bananas:  40, cherries: -40, dates: -40}
     // ];
-    const data = [
-      {month: "Q1-2016", apples: 10, bananas: 10, cherries: -10, dates: -10},
-      {month: "Q2-2016", apples: 20, bananas: 20, cherries: -20, dates: -20},
-      {month: "Q3-2016", apples:  30, bananas:  30, cherries: -30, dates: -30},
-      {month: "Q4-2016", apples:  40, bananas:  40, cherries: -40, dates: -40}
-    ];
-
-    let series = d3.stack()
-      .keys(["apples", "bananas", "cherries", "dates"])
-      .offset(d3.stackOffsetDiverging)
-      (data);
-
-    const margin = {top: 20, right: 30, bottom: 30, left: 60};
-    const width = 600, height = 500;
-    let svg = d3.select("app-cash-flow-diagram").append("svg")
-        .attr('width', width)
-        .attr('height', height)
-        .attr('margin', margin);
-
-    // var svg = d3.select("app-cash-flow-diagram").append("svg"),
-    //   margin = {top: 20, right: 30, bottom: 30, left: 60},
-    //   width = +svg.attr("width"),
-    //   height = +svg.attr("height");
-
-    let x = d3.scaleBand()
-      .domain(data.map(function(d) { return d.month; }))
-      .rangeRound([margin.left, width - margin.right])
-      .padding(0.1);
-
-    let y = d3.scaleLinear()
-      // .domain([d3.min(series, stackMin), d3.max(series, stackMax)])
-      .domain([-80, d3.max(series, stackMax)])
-      .rangeRound([height - margin.bottom, margin.top]);
-
-    let z = d3.scaleOrdinal(d3.schemeCategory10);
-
-    svg.append("g")
-      .selectAll("g")
-      .data(series)
-      .enter().append("g")
-      .attr("fill", function(d) { return z(d.key); })
-      .selectAll("rect")
-      .data(function(d) { return d; })
-      .enter().append("rect")
-      .attr("width", x.bandwidth)
-      .attr("x", function(d) { return x(d.data.month); })
-      .attr("y", function(d) { return y(0); }) // setting this to 0 produces bars that are below the y axis, so this likely means that bars are drawn "top down"
-      // .attr("y", function(d) { return y(d.data.bananas); })
-      .attr("height", function(d) { return y(d.data.apples); });
-      // .attr("y", function(d) { return y(d[1]); })
-      // .attr("height", function(d) { return y(d[0]) - y(d[1]); });
-
-    svg.append("g")
-      .attr("transform", "translate(0," + y(0) + ")")
-      .call(d3.axisBottom(x));
-
-    svg.append("g")
-      .attr("transform", "translate(" + margin.left + ",0)")
-      .call(d3.axisLeft(y));
-
-    function stackMin(serie) {
-      return d3.min(serie, function(d) { return d[0]; });
-    }
-
-    function stackMax(serie) {
-      return d3.max(serie, function(d) { return d[1]; });
-    }
+    //
+    // let series = d3.stack()
+    //   .keys(["apples", "bananas", "cherries", "dates"])
+    //   .offset(d3.stackOffsetDiverging)
+    //   (data);
+    //
+    // const margin = {top: 20, right: 30, bottom: 30, left: 60};
+    // const width = 600, height = 500;
+    // let svg = d3.select("app-cash-flow-diagram").append("svg")
+    //     .attr('width', width)
+    //     .attr('height', height)
+    //     .attr('margin', margin);
+    //
+    // // var svg = d3.select("app-cash-flow-diagram").append("svg"),
+    // //   margin = {top: 20, right: 30, bottom: 30, left: 60},
+    // //   width = +svg.attr("width"),
+    // //   height = +svg.attr("height");
+    //
+    // let x = d3.scaleBand()
+    //   .domain(data.map(function(d) { return d.month; }))
+    //   .rangeRound([margin.left, width - margin.right])
+    //   .padding(0.1);
+    //
+    // let y = d3.scaleLinear()
+    //   // .domain([d3.min(series, stackMin), d3.max(series, stackMax)])
+    //   .domain([-80, d3.max(series, stackMax)])
+    //   .rangeRound([height - margin.bottom, margin.top]);
+    //
+    // let z = d3.scaleOrdinal(d3.schemeCategory10);
+    //
+    // svg.append("g")
+    //   .selectAll("g")
+    //   .data(series)
+    //   .enter().append("g")
+    //   .attr("fill", function(d) { return z(d.key); })
+    //   .selectAll("rect")
+    //   .data(function(d) { return d; })
+    //   .enter().append("rect")
+    //   .attr("width", x.bandwidth)
+    //   .attr("x", function(d) { return x(d.data.month); })
+    //   .attr("y", function(d) {
+    //     return y(0);
+    //   }) // setting this to 0 produces bars that are below the y axis, so this likely means that bars are drawn "top down"
+    //   // .attr("y", function(d) { return y(d.data.bananas); })
+    //   .attr("height", function(d) { return y(d.data.apples); });
+    //   // .attr("y", function(d) { return y(d[1]); })
+    //   // .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+    //
+    // svg.append("g")
+    //   .attr("transform", "translate(0," + y(0) + ")")
+    //   .call(d3.axisBottom(x));
+    //
+    // svg.append("g")
+    //   .attr("transform", "translate(" + margin.left + ",0)")
+    //   .call(d3.axisLeft(y));
+    //
+    // function stackMin(serie) {
+    //   return d3.min(serie, function(d) { return d[0]; });
+    // }
+    //
+    // function stackMax(serie) {
+    //   return d3.max(serie, function(d) { return d[1]; });
+    // }
 
     // var data = [
     //   {year: "Year 1", installationCost: this.cashFlowForm.installationCost, annualSavings: this.cashFlowForm.energySavings},
