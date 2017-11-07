@@ -10,6 +10,8 @@ import {forEach} from "@angular/router/src/utils/collection";
 })
 export class CashFlowDiagramComponent implements OnInit {
   @Input()
+  toggleCalculate: boolean;
+  @Input()
   cashFlowResults: CashFlowResults;
   @Input()
   cashFlowForm: CashFlowForm;
@@ -22,10 +24,13 @@ export class CashFlowDiagramComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.makeGraph();
+    if (this.toggleCalculate) {
+      this.makeGraph();
+    }
   }
 
   makeGraph() {
+    d3.select('app-cash-flow-diagram').selectAll('svg').remove();
     const margin = {top: 30, right: 10, bottom: 50, left: 50},
       width = 600,
       height = 400;
@@ -88,13 +93,17 @@ export class CashFlowDiagramComponent implements OnInit {
     data.push({'value': -this.cashFlowForm.disposal, 'fill': colors[2], 'year': 'Year ' + this.cashFlowForm.lifeYears});
     partialSort(data, index, index + 5);
     stackBars(data, index, index + 4);
-    const tmp = data[data.length - 2].value;
-    data[data.length - 2].value += data[data.length - 1].value;
-    data[data.length - 1].value = tmp;
-    maxVals['Year ' + this.cashFlowForm.lifeYears] = data[data.length - 2].value;
-    debugger
+    const tmp = data[data.length - 2];
+    data[data.length - 2] = data[data.length - 1];
+    data[data.length - 1] = tmp;
+    data[data.length - 2].value += tmp.value;
 
-// Add svg to
+    // const tmp = data[data.length - 2].value;
+    // data[data.length - 2].value += data[data.length - 1].value;
+    // data[data.length - 1].value = tmp;
+    maxVals['Year ' + this.cashFlowForm.lifeYears] = data[data.length - 2].value;
+
+    // Add svg to
     let svg = d3.select('app-cash-flow-diagram').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 // set the ranges
