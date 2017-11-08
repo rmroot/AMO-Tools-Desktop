@@ -32,8 +32,8 @@ export class CashFlowDiagramComponent implements OnInit {
   makeGraph() {
     d3.select('app-cash-flow-diagram').selectAll('svg').remove();
     const margin = {top: 30, right: 10, bottom: 50, left: 50},
-      width = 400,
-      height = 400;
+      width = 400 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
 
     const colors = [
       '#84B641',
