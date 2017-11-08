@@ -143,9 +143,9 @@ export class CashFlowDiagramComponent implements OnInit {
       .attr("height", y.bandwidth());
 
 // add the x Axis
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+//     svg.append("g")
+//       .attr("transform", "translate(0," + height + ")")
+//       .call(d3.axisBottom(x));
 
 // add the y Axis
     let yAxisGroup = svg.append("g")
@@ -160,7 +160,8 @@ export class CashFlowDiagramComponent implements OnInit {
       .attr('x', function(d, i) { return 5; })
       .attr('fill', '#FFFFFF')
       // .attr('x', function(d, i) { console.log(d.year + ' and val is ' + maxVals[d.year]); return maxVals[d.year] / 10; })
-      .style('text-anchor', function(d, i) { return 'start'; });
+      .style('text-anchor', function(d, i) { return 'start'; })
+      .attr('transform', 'rotate(270)', 'translate(' + 20 + ',' + 20 + ')');
       // .style('text-anchor', 'end');
       // .style('text-anchor', function(d, i) { return d.value < 0 ? 'start' : 'end'; });
 
