@@ -32,7 +32,7 @@ export class CashFlowDiagramComponent implements OnInit {
   makeGraph() {
     d3.select('app-cash-flow-diagram').selectAll('svg').remove();
     const margin = {top: 30, right: 10, bottom: 50, left: 50},
-      width = 600,
+      width = 400,
       height = 400;
 
     const colors = [
@@ -104,7 +104,7 @@ export class CashFlowDiagramComponent implements OnInit {
     maxVals['Year ' + this.cashFlowForm.lifeYears] = data[data.length - 2].value;
 
     // Add svg to
-    let svg = d3.select('app-cash-flow-diagram').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    let svg = d3.select('app-cash-flow-diagram').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'rotate(90 200 200)', 'translate(' + margin.left + ',' + margin.top + ')');
 
 // set the ranges
     const y = d3.scaleBand()
