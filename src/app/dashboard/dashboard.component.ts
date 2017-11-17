@@ -15,7 +15,7 @@ import { WindowRefService } from '../indexedDb/window-ref.service';
 import { ImportExportService } from '../shared/import-export/import-export.service';
 import { WallLossesSurface, GasLoadChargeMaterial, LiquidLoadChargeMaterial, SolidLoadChargeMaterial, AtmosphereSpecificHeat, FlueGasMaterial, SolidLiquidFlueGasMaterial } from '../shared/models/materials';
 import { ReportRollupService } from '../report-rollup/report-rollup.service';
-import { SettingsService } from '../settings/settings.service'; 
+import { SettingsService } from '../settings/settings.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -81,9 +81,11 @@ export class DashboardComponent implements OnInit {
       this.getData();
     }
 
+    // debugger
     this.assessmentService.createAssessment.subscribe(val => {
       this.createAssessment = val;
     })
+    // debugger
   }
 
   ngOnDestroy() {
@@ -601,7 +603,25 @@ export class DashboardComponent implements OnInit {
           psat: dataObj.assessment.psat,
           phast: dataObj.assessment.phast,
           directoryId: tmpDirectoryId
-        }
+        };
+        // if (tmpAssessment.phast && tmpAssessment.phast.losses.flueGasLosses && tmpAssessment.phast.losses.flueGasLosses[0].flueGasType === 'By Volume') {
+        //   if (tmpAssessment.phast.losses.flueGasLosses[0].flueGasByVolume && !tmpAssessment.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature) {
+        //     tmpAssessment.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature = 125;
+        //     tmpAssessment.phast.modifications.forEach((mod) => {
+        //       if (mod.phast.losses.flueGasLosses[0].flueGasByVolume) {
+        //         mod.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature = 125;
+        //       }
+        //     });
+        //   }
+        // }
+        // if (tmpAssessment.psat && !tmpAssessment.psat.inputs.fluidType) {
+        //   tmpAssessment.psat.inputs.fluidType = 'Other';
+        //   tmpAssessment.psat.inputs.fluidTemperature = 68;
+        //   tmpAssessment.psat.modifications.forEach((mod) => {
+        //     mod.psat.inputs.fluidType = 'Other';
+        //     mod.psat.inputs.fluidTemperature = 68;
+        //   });
+        // }
         this.indexedDbService.addAssessment(tmpAssessment).then(
           results => {
             //check for psat until phast has settings

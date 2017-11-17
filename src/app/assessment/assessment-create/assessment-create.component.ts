@@ -116,8 +116,10 @@ export class AssessmentCreateComponent implements OnInit {
           }
           tmpAssessment.directoryId = this.directory.id;
           this.indexedDbService.addAssessment(tmpAssessment).then(assessmentId => {
+            debugger
             this.indexedDbService.getAssessment(assessmentId).then(assessment => {
               tmpAssessment = assessment;
+              debugger
               if (this.directory.assessments) {
                 this.directory.assessments.push(tmpAssessment);
               } else {
@@ -149,8 +151,10 @@ export class AssessmentCreateComponent implements OnInit {
           tmpAssessment.directoryId = this.directory.id;
 
           this.indexedDbService.addAssessment(tmpAssessment).then(assessmentId => {
+            debugger
             this.indexedDbService.getAssessment(assessmentId).then(assessment => {
               tmpAssessment = assessment;
+              debugger
               if (this.directory.assessments) {
                 this.directory.assessments.push(tmpAssessment);
               } else {

@@ -63,6 +63,17 @@ export class PhastComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       tmpAssessmentId = params['id'];
       this.indexedDbService.getAssessment(parseInt(tmpAssessmentId)).then(dbAssessment => {
+        debugger
+        if (dbAssessment.phast && dbAssessment.phast.losses.flueGasLosses && dbAssessment.phast.losses.flueGasLosses[0].flueGasType === 'By Volume') {
+          if (dbAssessment.phast.losses.flueGasLosses[0].flueGasByVolume && !dbAssessment.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature) {
+            dbAssessment.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature = 125;
+            dbAssessment.phast.modifications.forEach((mod) => {
+              if (mod.phast.losses.flueGasLosses[0].flueGasByVolume) {
+                mod.phast.losses.flueGasLosses[0].flueGasByVolume.fuelTemperature = 125;
+              }
+            });
+          }
+        }
         this.assessment = dbAssessment;
         this._phast = (JSON.parse(JSON.stringify(this.assessment.phast)));
         this.lossesService.baseline.next(this._phast);

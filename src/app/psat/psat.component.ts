@@ -75,6 +75,15 @@ export class PsatComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       tmpAssessmentId = params['id'];
       this.indexedDbService.getAssessment(parseInt(tmpAssessmentId)).then(dbAssessment => {
+        debugger
+        if (dbAssessment.psat && !dbAssessment.psat.inputs.fluidType) {
+          dbAssessment.psat.inputs.fluidType = 'Other';
+          dbAssessment.psat.inputs.fluidTemperature = 68;
+          dbAssessment.psat.modifications.forEach((mod) => {
+            mod.psat.inputs.fluidType = 'Other';
+            mod.psat.inputs.fluidTemperature = 68;
+          });
+        }
         this.assessment = dbAssessment;
         this._psat = (JSON.parse(JSON.stringify(this.assessment.psat)));
         this.isValid = true;
