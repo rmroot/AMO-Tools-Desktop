@@ -27,7 +27,7 @@ export class PsatService {
   }
 
   roundVal(val: number, digits: number) {
-    return Number((Math.round(val * 100) / 100).toFixed(digits))
+    return Number(val.toFixed(digits))
   }
 
   convertInputs(psatInputs: PsatInputs, settings: Settings) {
@@ -76,7 +76,7 @@ export class PsatService {
   }
 
   resultsModified(psatInputs: PsatInputs, settings: Settings, baseline_pump_efficiency: number): PsatOutputs {
-    psatInputs = this.convertInputs(psatInputs, settings);    
+    psatInputs = this.convertInputs(psatInputs, settings);
     let tmpInputs: any;
     tmpInputs = psatInputs;
     tmpInputs.baseline_pump_efficiency = baseline_pump_efficiency;
@@ -189,10 +189,10 @@ export class PsatService {
       dischargeGaugeElevation = this.convertUnitsService.value(dischargeGaugeElevation).from('m').to('ft');
     }
 
-    // if (settings.pressureMeasurement != 'psi') {
-    //   suctionTankGasOverPressure = this.convertUnitsService.value(suctionTankGasOverPressure).from(settings.pressureMeasurement).to('psi');
-    //   dischargeGaugePressure = this.convertUnitsService.value(dischargeGaugePressure).from(settings.pressureMeasurement).to('psi');
-    // }
+    if (settings.pressureMeasurement != 'psi') {
+      suctionTankGasOverPressure = this.convertUnitsService.value(suctionTankGasOverPressure).from(settings.pressureMeasurement).to('psi');
+      dischargeGaugePressure = this.convertUnitsService.value(dischargeGaugePressure).from(settings.pressureMeasurement).to('psi');
+    }
 
     if (settings.flowMeasurement != 'gpm') {
       flowRate = this.convertUnitsService.value(flowRate).from(settings.flowMeasurement).to('gpm');
@@ -212,6 +212,14 @@ export class PsatService {
     }
 
     let tmpResults = psatAddon.headToolSuctionTank(inputs);
+    if (settings.distanceMeasurement != 'ft') {
+      tmpResults.differentialElevationHead = this.convertUnitsService.value(tmpResults.differentialElevationHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.differentialPressureHead = this.convertUnitsService.value(tmpResults.differentialPressureHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.differentialVelocityHead = this.convertUnitsService.value(tmpResults.differentialVelocityHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.estimatedDischargeFrictionHead = this.convertUnitsService.value(tmpResults.estimatedDischargeFrictionHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.estimatedSuctionFrictionHead = this.convertUnitsService.value(tmpResults.estimatedSuctionFrictionHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.pumpHead = this.convertUnitsService.value(tmpResults.pumpHead).from('ft').to(settings.distanceMeasurement);
+    }
     let results = {
       differentialElevationHead: this.roundVal(tmpResults.differentialElevationHead, 2),
       differentialPressureHead: this.roundVal(tmpResults.differentialPressureHead, 2),
@@ -220,6 +228,7 @@ export class PsatService {
       estimatedSuctionFrictionHead: this.roundVal(tmpResults.estimatedSuctionFrictionHead, 2),
       pumpHead: this.roundVal(tmpResults.pumpHead, 2)
     }
+
     return results;
   }
 
@@ -254,6 +263,11 @@ export class PsatService {
       flowRate = this.convertUnitsService.value(flowRate).from(settings.flowMeasurement).to('gpm');
     }
 
+    if (settings.pressureMeasurement != 'psi') {
+      dischargeGaugePressure = this.convertUnitsService.value(dischargeGaugePressure).from(settings.pressureMeasurement).to('psi');
+      suctionGaugePressure = this.convertUnitsService.value(suctionGaugePressure).from(settings.pressureMeasurement).to('psi');
+    }
+
     let inputs: any = {
       specificGravity: specificGravity,
       flowRate: flowRate,
@@ -268,6 +282,14 @@ export class PsatService {
     }
 
     let tmpResults = psatAddon.headTool(inputs);
+    if (settings.distanceMeasurement != 'ft') {
+      tmpResults.differentialElevationHead = this.convertUnitsService.value(tmpResults.differentialElevationHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.differentialPressureHead = this.convertUnitsService.value(tmpResults.differentialPressureHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.differentialVelocityHead = this.convertUnitsService.value(tmpResults.differentialVelocityHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.estimatedDischargeFrictionHead = this.convertUnitsService.value(tmpResults.estimatedDischargeFrictionHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.estimatedSuctionFrictionHead = this.convertUnitsService.value(tmpResults.estimatedSuctionFrictionHead).from('ft').to(settings.distanceMeasurement);
+      tmpResults.pumpHead = this.convertUnitsService.value(tmpResults.pumpHead).from('ft').to(settings.distanceMeasurement);
+    }
     let results = {
       differentialElevationHead: this.roundVal(tmpResults.differentialElevationHead, 2),
       differentialPressureHead: this.roundVal(tmpResults.differentialPressureHead, 2),
@@ -561,8 +583,12 @@ export class PsatService {
     let driveEnum;
     if (drive == 'Direct Drive') {
       driveEnum = 0;
-    } else if (drive == 'Belt Drive') {
+    } else if (drive == 'V-Belt Drive') {
       driveEnum = 1;
+    } else if (drive == 'Notched V-Belt Drive') {
+      driveEnum = 2;
+    } else if (drive == 'Synchronous Belt Drive') {
+      driveEnum = 3;
     }
     return driveEnum;
   }
@@ -571,8 +597,12 @@ export class PsatService {
     if (num == 0) {
       drive = 'Direct Drive';
     } else if (num == 1) {
-      drive = 'Belt Drive';
-    }
+      drive = 'V-Belt Drive';
+    }   else if (num == 2) {
+    drive = 'Notched V-Belt Drive';
+    }  else if (num == 3) {
+    drive = 'Synchronous Belt Drive';
+  }
     return drive;
   }
   getFixedSpeedEmum(fixedSpeed: string): number {
@@ -651,7 +681,8 @@ export class PsatService {
       'motorKW': ['', Validators.required],
       'motorAmps': ['', Validators.required],
       'measuredVoltage': ['', Validators.required],
-      'optimizeCalculation': ['', Validators.required]
+      'optimizeCalculation': ['', Validators.required],
+      'implementationCosts': ['']
     })
   }
 
@@ -687,7 +718,10 @@ export class PsatService {
       'motorKW': [psatInputs.motor_field_power, Validators.required],
       'motorAmps': [psatInputs.motor_field_current, Validators.required],
       'measuredVoltage': [psatInputs.motor_field_voltage, Validators.required],
-      'optimizeCalculation': [psatInputs.optimize_calculation, Validators.required]
+      'optimizeCalculation': [psatInputs.optimize_calculation, Validators.required],
+      'implementationCosts': [psatInputs.implementationCosts],
+      'fluidType': [psatInputs.fluidType],
+      'fluidTemperature': [psatInputs.fluidTemperature]
     })
   }
 
@@ -726,8 +760,11 @@ export class PsatService {
       motor_field_voltage: form.value.measuredVoltage,
       cost_kw_hour: form.value.costKwHr,
       cost: form.value.costKwHr,
-      optimize_calculation: form.value.optimizeCalculation
-    }
+      optimize_calculation: form.value.optimizeCalculation,
+      implementationCosts: form.value.implementationCosts,
+      fluidType: form.value.fluidType,
+      fluidTemperature: form.value.fluidTemperature
+    };
     return tmpPsatInputs;
   }
 

@@ -30,10 +30,12 @@ export class ChargeMaterialComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
 
   _chargeMaterial: Array<any>;
   firstChange: boolean = true;
+  resultsUnit: string;
   constructor(private formBuilder: FormBuilder, private phastService: PhastService, private chargeMaterialService: ChargeMaterialService, private chargeMaterialCompareService: ChargeMaterialCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -51,6 +53,11 @@ export class ChargeMaterialComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
     if (!this._chargeMaterial) {
       this._chargeMaterial = new Array();
     }
@@ -154,7 +161,9 @@ export class ChargeMaterialComponent implements OnInit {
   }
 
   addMaterial() {
-    this.chargeMaterialService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.chargeMaterialService.addLoss(this.isBaseline);
+    }
     if (this.chargeMaterialCompareService.differentArray) {
       this.chargeMaterialCompareService.addObject(this.chargeMaterialCompareService.differentArray.length - 1);
     }
@@ -241,7 +250,9 @@ export class ChargeMaterialComponent implements OnInit {
   changeField(str: string) {
     this.fieldChange.emit(str);
   }
-
+  focusOut() {
+    this.fieldChange.emit('default');
+  }
   setCompareVals() {
     if (this.isBaseline) {
       this.chargeMaterialCompareService.baselineMaterials = this.losses.chargeMaterials;

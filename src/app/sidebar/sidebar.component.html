@@ -70,6 +70,9 @@
     <li [ngClass]="{'selected': dashboardView == 'contact'}">
       <span (click)="showContact()">Contact</span>
     </li>
+    <li [ngClass]="{'selected': dashboardView == 'acknowledgments-page'}">
+      <span (click)="showAcknowledgments()">Acknowledgments</span>
+    </li>
     <!--<a href="mailto:accawigk@ornl.gov">Contact</a></li>-->
   </ul>
 </div>
@@ -77,7 +80,14 @@
 <div class="sidebar-group">
   <ul>
     <li>
-      <span class="version-num">v{{versionNum}}</span>
+      <span class="version-num">v{{versionNum}} <i class="fa fa-info-circle" (click)="openVersionModal()"></i></span>
+    </li>
+    <li>
+      <span *ngIf="isUpdateAvailable" class="update-available" (click)="openModal()">Update Available!</span>
     </li>
   </ul>
 </div>
+
+
+<app-update-modal *ngIf="showModal" (closeModal)="closeModal()"></app-update-modal>
+<app-version-modal *ngIf="showVersionModal" (closeModal)="closeVersionModal()"></app-version-modal>

@@ -29,10 +29,13 @@ export class EnergyInputExhaustGasLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
   _exhaustGasLosses: Array<any>;
   firstChange: boolean = true;
   availableHeat: number = 0;
+  resultsUnit: string;
   constructor(private phastService: PhastService, private energyInputExhaustGasService: EnergyInputExhaustGasService, private energyInputExhaustGasCompareService: EnergyInputExhaustGasCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,6 +53,12 @@ export class EnergyInputExhaustGasLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._exhaustGasLosses) {
       this._exhaustGasLosses = new Array();
     }
@@ -111,7 +120,9 @@ export class EnergyInputExhaustGasLossesComponent implements OnInit {
     this.energyInputExhaustGasService.deleteLossIndex.next(null);
   }
   addLoss() {
-    this.energyInputExhaustGasService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.energyInputExhaustGasService.addLoss(this.isBaseline);
+    }
     if (this.energyInputExhaustGasCompareService.differentArray) {
       this.energyInputExhaustGasCompareService.addObject(this.energyInputExhaustGasCompareService.differentArray.length - 1);
     }
@@ -139,9 +150,14 @@ export class EnergyInputExhaustGasLossesComponent implements OnInit {
     let tmpLoss = this.energyInputExhaustGasService.getLossFromForm(loss.form);
     this.availableHeat = this.phastService.availableHeat(tmpLoss, this.settings);
     tmpLoss.availableHeat = this.availableHeat;
-    let results = this.phastService.energyInputExhaustGasLosses(tmpLoss, this.settings);
-    loss.heatLoss = results.heatDelivered;
-    loss.exhaustGas = results.exhaustGasLosses;
+    if (loss.form.status == 'VALID') {
+      let results = this.phastService.energyInputExhaustGasLosses(tmpLoss, this.settings);
+      loss.heatLoss = results.heatDelivered;
+      loss.exhaustGas = results.exhaustGasLosses;
+    } else {
+      loss.heatLoss = 0;
+      loss.exhaustGas = 0;
+    }
   }
 
   saveLosses() {

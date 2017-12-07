@@ -29,9 +29,12 @@ export class AtmosphereLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
   _atmosphereLosses: Array<any>;
   firstChange: boolean = true;
+
+  resultsUnit: string;
   constructor(private atmosphereLossesService: AtmosphereLossesService, private phastService: PhastService, private atmosphereLossesCompareService: AtmosphereLossesCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,6 +52,12 @@ export class AtmosphereLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.settings.energyResultUnit != 'kWh'){
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    }else{
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._atmosphereLosses) {
       this._atmosphereLosses = new Array();
     }
@@ -110,7 +119,9 @@ export class AtmosphereLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.atmosphereLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.atmosphereLossesService.addLoss(this.isBaseline);
+    }
     if (this.atmosphereLossesCompareService.differentArray) {
       this.atmosphereLossesCompareService.addObject(this.atmosphereLossesCompareService.differentArray.length - 1);
     }

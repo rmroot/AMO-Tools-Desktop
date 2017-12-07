@@ -31,6 +31,7 @@ export class OtherLossesFormComponent implements OnInit {
   counter: any;
 
   firstChange: boolean = true;
+  resultsUnit: string;
   constructor(private windowRefService: WindowRefService, private otherLossesCompareService: OtherLossesCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -46,6 +47,11 @@ export class OtherLossesFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
   }
 
   ngAfterViewInit() {

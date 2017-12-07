@@ -1,5 +1,13 @@
 <div *ngIf="assessment && settings">
-  <app-phast-banner [assessment]="assessment"></app-phast-banner>
+  <div class="sticky-top hide-print">
+    <app-phast-banner [assessment]="assessment"></app-phast-banner>
+    <app-phast-tabs *ngIf="mainTab == 'assessment'"></app-phast-tabs>
+    <nav>
+      <app-losses-tabs *ngIf="currentTab == 'losses' && mainTab == 'assessment'" [phast]="_phast" [settings]="settings" [saveDbToggle]="saveDbToggle"></app-losses-tabs>
+    </nav>
+  </div>
+
+
   <div *ngIf="mainTab == 'system-setup'">
     <nav>
       <ul class="tabs subtabs progress-tabs">
@@ -17,8 +25,8 @@
     <div class="tab-content">
       <div class="wrapper">
         <div class="form">
-          <app-system-basics *ngIf="subTab == 'system-basics'" [settings]="settings" [saveClicked]="saveClicked" [assessment]="assessment"
-            [isAssessmentSettings]="isAssessmentSettings" (updateSettings)="getSettings($event)" (updateAssessment)="save()"></app-system-basics>
+          <app-system-basics *ngIf="subTab == 'system-basics'" [phast]="_phast" [settings]="settings" [saveClicked]="saveClicked" [assessment]="assessment"
+            [isAssessmentSettings]="isAssessmentSettings" (updateSettings)="getSettings($event)" (save)="saveDb()"></app-system-basics>
           <app-operating-hours *ngIf="subTab == 'operating-hours'" [phast]="_phast" [saveClicked]="saveClicked" (save)="saveDb()"></app-operating-hours>
           <app-energy-costs *ngIf="subTab == 'energy-costs'" [phast]="_phast" [saveClicked]="saveClicked" (save)="saveDb()" [settings]="settings"></app-energy-costs>
         </div>
@@ -30,7 +38,6 @@
   </div>
 
   <div class="tab-content" *ngIf="mainTab == 'assessment'">
-    <app-phast-tabs></app-phast-tabs>
     <app-losses *ngIf="currentTab == 'losses'" [(phast)]="_phast" [saveClicked]="saveClicked" (saved)="saveDb()" [settings]="settings"></app-losses>
 
     <div class="row tab-content" *ngIf="currentTab != 'losses'">
@@ -59,7 +66,7 @@
     <app-phast-diagram></app-phast-diagram>
   </div>
 
-  <div class="footer">
+  <div class="footer" *ngIf="mainTab == 'system-setup' || mainTab == 'assessment'">
     <div class="pull-left">
       <button class="btn btn-secondary" *ngIf="mainTab == 'system-setup'" (click)="close()">Close</button>
       <button class="btn btn-secondary" *ngIf="mainTab != 'system-setup'" (click)="goBack()">Back</button>

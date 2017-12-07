@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Settings } from '../../shared/models/settings';
+import { ConvertUnitsService } from '../../shared/convert-units/convert-units.service';
 
 @Component({
   selector: 'app-phast-settings',
@@ -13,11 +14,10 @@ export class PhastSettingsComponent implements OnInit {
   startSavePolling = new EventEmitter<boolean>();
 
   fuelFiredOptions: Array<string> = [
-    'Ladle Heater 1',
-    'Ladle Heater 2',
+    'Ladle Heater',
     'Reheat Furnace',
-    'Tundish Heater 1',
-    'Tundish Heater 2'
+    'Tundish Heater',
+    'Custom Fuel Furnace'
   ]
 
   electrotechOptions: Array<string> = [
@@ -30,9 +30,7 @@ export class PhastSettingsComponent implements OnInit {
   ]
 
   // electricOptions: Array<string>;
-
   constructor() { }
-
   ngOnInit() {
     if (!this.settingsForm.value.furnaceType || this.settingsForm.value.furnaceType == '') {
       this.setOptions();
@@ -42,14 +40,16 @@ export class PhastSettingsComponent implements OnInit {
   setOptions() {
     if (this.settingsForm.value.energySourceType == 'Fuel') {
       this.settingsForm.patchValue({
-        furnaceType: 'Ladle Heater 1'
+        furnaceType: 'Ladle Heater'
       })
     } else if (this.settingsForm.value.energySourceType == 'Electricity') {
       this.settingsForm.patchValue({
-        furnaceType: 'Electrical Infrared'
+        furnaceType: 'Electrical Infrared',
+        energyResultUnit: 'kWh'
       })
     }
   }
+
 
   startPolling() {
     this.startSavePolling.emit(true);

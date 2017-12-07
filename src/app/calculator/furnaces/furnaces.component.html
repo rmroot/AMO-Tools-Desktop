@@ -34,6 +34,12 @@
               provided by the PHAST tool.
             </p>
           </li>
+          <li>
+            <a (click)="showTool('pre-assessment')">Pre Assessment Calculator</a>
+            <p>Enter design or metered energy use data for furnaces within a facility to determine the relative energy use and prioritize
+              energy use evaluations and improvements.
+            </p>
+          </li>
         </ul>
       </div>
     </div>
@@ -43,10 +49,11 @@
 <div class="calculator" *ngIf="getSelectedTool() == 'o2-enrichment'">
   <div class="row">
     <div class="col-lg-11 mx-auto">
-      <h2>O<sub>2</sub> Enrichment</h2>
+      <h2>Fuel Consumption</h2>
       <p>Calculation of available heat (an indication of thermal efficiency) for fuel fired furnaces and expected energy savings
-        when oxygen in combustion, “air”, is changed from standard (21%) to a higher value. Enter data for current (“Combustion
-        with Air”) and new (“Combustion with Oxygen Enriched Air”) configurations.</p>
+        when oxygen in combustion air, is changed from standard (21%) to a higher value. Can add multiple lines to the graph
+        by changing values under "Combustion with Oxygen enriched Air" and clicking "Plot".
+        Changing values for "Combustion with Air" will adjust all the lines on the graph.</p>
     </div>
   </div>
   <div class="calculator-container">
@@ -95,5 +102,25 @@
   </div>
   <div class="calculator-container">
     <app-energy-use></app-energy-use>
+  </div>
+</div>
+
+
+<div class="calculator" *ngIf="getSelectedTool() == 'pre-assessment'">
+  <div class="row">
+    <div class="col-lg-11 mx-auto">
+      <h2>Pre Assessment Calculator</h2>
+      <p>This calculator allows the user to enter either energy use information gathered from meters or design specifications
+        (for fuel, electrotechnology or steam furnaces) to calculate energy use for multiple furnaces. This allows users to
+        compare the relative energy use of furnaces within a facility to prioritize energy evaluations and efficiency improvements.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-11 mx-auto">
+      <div class="calculator-container">
+        <app-pre-assessment></app-pre-assessment>
+      </div>
+    </div>
   </div>
 </div>

@@ -36,7 +36,8 @@ export class AtmosphereLossesFormComponent implements OnInit {
 
   firstChange: boolean = true;
   counter: any;
-
+  specificHeatError: string = null;
+  flowRateError: string = null;
   temperatureError: string = null;
   materialTypes: Array<AtmosphereSpecificHeat>;
   showModal: boolean = false;
@@ -102,11 +103,28 @@ export class AtmosphereLossesFormComponent implements OnInit {
       this.temperatureError = null;
     }
   }
+  checkCorrectionError(bool?: boolean) {
+    if (!bool) {
+      this.startSavePolling();
+    }
+    if (this.atmosphereLossForm.value.specificHeat < 0) {
+      this.specificHeatError = 'Specific Heat must be greater than 0';
+    } else {
+      this.specificHeatError = null;
+    }
+    if (this.atmosphereLossForm.value.flowRate < 0) {
+      this.flowRateError = 'Flow Rate must be greater than 0';
+    } else {
+      this.flowRateError = null;
+    }
+  }
 
   focusField(str: string) {
     this.changeField.emit(str);
   }
-
+  focusOut() {
+    this.changeField.emit('default');
+  }
   emitSave() {
     this.saveEmit.emit(true);
   }

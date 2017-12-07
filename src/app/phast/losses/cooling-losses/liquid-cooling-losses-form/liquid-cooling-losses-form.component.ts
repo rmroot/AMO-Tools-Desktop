@@ -27,7 +27,7 @@ export class LiquidCoolingLossesFormComponent implements OnInit {
   @ViewChild('lossForm') lossForm: ElementRef;
   form: any;
   elements: any;
-
+  specificHeatError: string = null;
   firstChange: boolean = true;
   counter: any;
   temperatureError: string = null;
@@ -87,13 +87,26 @@ export class LiquidCoolingLossesFormComponent implements OnInit {
     }
   }
 
+  checkInputError(bool?: boolean) {
+    if (!bool) {
+      this.startSavePolling();
+    }
+    if (this.lossesForm.value.avgSpecificHeat < 0) {
+      this.specificHeatError = 'Specific Heat must be equal or grater than 0';
+    } else {
+      this.specificHeatError = null;
+    }
+  }
+
   focusField(str: string) {
     this.changeField.emit(str);
   }
   emitSave() {
     this.saveEmit.emit(true);
   }
-
+  focusOut() {
+    this.changeField.emit('default');
+  }
   startSavePolling() {
     this.checkForm();
     if (this.counter) {

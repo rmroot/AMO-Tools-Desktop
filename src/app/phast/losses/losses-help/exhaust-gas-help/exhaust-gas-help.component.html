@@ -25,7 +25,7 @@
       </p>
       <label><u><strong>Input</strong></u></label>
       <p>
-        Units: <strong>&#8457;</strong> or <strong>&#8451;</strong><br> Minimum Value: <strong>0</strong><br>
+        Units: <strong>&#8457;</strong> or <strong>&#8451;</strong>
       </p>
     </div>
   </div>
@@ -109,5 +109,20 @@
       </p>
     </div>
   </div>
+
+  <div class="card" *ngIf="currentField == 'default'">
+    <div class="card-header">
+      Savings Suggestions
+    </div>
+    <div class="card-block">
+      <label><u><strong>Description</strong></u></label>
+      <ul>
+        <li class="help-general">Minimize volume by controlling make up air and air leaks in the oven</li>
+        <li class="help-general">Use preheated combustion air</li>
+        <li class="help-general">Reduce exhaust gas temperature by using one or more heat recovery methods</li>
+      </ul>
+    </div>
+  </div>
+
 
 </div>

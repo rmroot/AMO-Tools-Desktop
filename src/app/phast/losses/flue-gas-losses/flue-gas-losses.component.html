@@ -24,7 +24,7 @@
     <div class="col-12">
       <div class="form-group">
         <label class="small" for="type">Type of fuel</label>
-        <select class="form-control" id="type" [(ngModel)]="loss.measurementType" [disabled]="!baselineSelected" (focus)="changeField('measurementType')">
+        <select class="form-control" id="type" [(ngModel)]="loss.measurementType" [disabled]="!baselineSelected" (focus)="changeField('measurementType')" (blur)="focusOut()">
             <option [ngValue]="'By Volume'">Gas</option>
             <option [ngValue]="'By Mass'">Solid/Liquid</option>
             </select>
@@ -51,9 +51,7 @@
       <div class="form-group">
         <label class="small">Gross Heat</label>
         <div *ngIf="loss.grossHeat" class="text-center small">
-          {{loss.grossHeat | number:'2.0-0'}}
-          <span *ngIf="settings.unitsOfMeasure == 'Imperial'">Btu/hr</span>
-          <span *ngIf="settings.unitsOfMeasure == 'Metric'">kJ/hr</span>
+          {{loss.grossHeat | sigFigs:'5'}} <span>{{resultsUnit}}</span>
         </div>
         <div *ngIf="!loss.grossHeat" class="text-center small">
           &mdash; &mdash;
@@ -62,9 +60,7 @@
       <div class="form-group">
         <label class="small">System Losses</label>
         <div *ngIf="loss.systemLosses" class="text-center small">
-          {{loss.systemLosses | number:'2.0-0'}}
-          <span *ngIf="settings.unitsOfMeasure == 'Imperial'">Btu/hr</span>
-          <span *ngIf="settings.unitsOfMeasure == 'Metric'">kJ/hr</span>
+          {{loss.systemLosses | sigFigs:'5'}} <span>{{resultsUnit}}</span>
         </div>
         <div *ngIf="!loss.systemLosses" class="text-center small">
           &mdash; &mdash;

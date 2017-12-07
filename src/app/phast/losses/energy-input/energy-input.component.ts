@@ -29,9 +29,12 @@ export class EnergyInputComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
   _energyInputs: Array<any>;
   firstChange: boolean = true;
+  resultsUnit: string;
   constructor(private energyInputService: EnergyInputService, private phastService: PhastService, private energyInputCompareService: EnergyInputCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,6 +52,12 @@ export class EnergyInputComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._energyInputs) {
       this._energyInputs = new Array();
     }
@@ -122,7 +131,9 @@ export class EnergyInputComponent implements OnInit {
   }
 
   addLoss() {
-    this.energyInputService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.energyInputService.addLoss(this.isBaseline);
+    }
     if (this.energyInputCompareService.differentArray) {
       this.energyInputCompareService.addObject(this.energyInputCompareService.differentArray.length - 1);
     }

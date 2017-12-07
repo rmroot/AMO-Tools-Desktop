@@ -40,9 +40,16 @@ export class HeatSystemEfficiencyComponent implements OnInit {
 
   systemLosses: number = 0;
   grossHeat: number = 0;
+  resultsUnit: string;
   constructor(private formBuilder: FormBuilder, private phastService: PhastService, private heatSystemEfficiencyCompareService: HeatSystemEfficiencyCompareService, private windowRefService: WindowRefService) { }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     this.initForm(this.phast.systemEfficiency);
 
     if (!this.baselineSelected) {
@@ -56,10 +63,10 @@ export class HeatSystemEfficiencyComponent implements OnInit {
     this.initDifferenceMonitor();
   }
 
-  ngOnDestory(){
-    if(this.isBaseline){
+  ngOnDestroy() {
+    if (this.isBaseline) {
       this.heatSystemEfficiencyCompareService.baseline = null;
-    }else{
+    } else {
       this.heatSystemEfficiencyCompareService.modification = null;
     }
   }
@@ -132,7 +139,7 @@ export class HeatSystemEfficiencyComponent implements OnInit {
     if (!bool) {
       this.startSavePolling();
     }
-    let additionalHeat = this.phastService.sumChargeMaterialExothermic(this.losses.chargeMaterials);
+    let additionalHeat = this.phastService.sumChargeMaterialExothermic(this.losses.chargeMaterials, this.settings);
     this.grossHeat = (this.phastService.sumHeatInput(this.losses, this.settings) / this.efficiencyForm.value.efficiency) - additionalHeat;
     this.systemLosses = this.grossHeat * (1 - (this.efficiencyForm.value.efficiency / 100));
   }
