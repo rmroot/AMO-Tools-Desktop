@@ -37,8 +37,9 @@ export class O2EnrichmentComponent implements OnInit {
   }
 
   calculate() {
-    this.o2EnrichmentOutput = this.phastService.o2Enrichment(this.o2Enrichment);
+    // this.o2EnrichmentOutput;
   }
+
 
   setTab(str: string) {
     this.tabSelect = str;

@@ -49,7 +49,7 @@ export class EnergyUseComponent implements OnInit {
   }
 
   calculate() {
-    this.flowCalculationResults = this.phastService.flowCalculations(this.flowCalculations);
+    // this.flowCalculationResults = this.phastService.flowCalculations(this.flowCalculations);
   }
 
 }

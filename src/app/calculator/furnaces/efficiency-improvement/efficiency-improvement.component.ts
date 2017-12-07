@@ -26,7 +26,15 @@ export class EfficiencyImprovementComponent implements OnInit {
   }
 
   calculate() {
-    this.efficiencyImprovementOutputs = this.phastService.efficiencyImprovement(this.efficiencyImprovementInputs);
+    // this.efficiencyImprovementOutputs = this.phastService.efficiencyImprovement(this.efficiencyImprovementInputs);
+    this.efficiencyImprovementOutputs = {
+      currentAvailableHeat: 0,
+      currentExcessAir: 0,
+      newAvailableHeat: 0,
+      newEnergyInput: 0,
+      newExcessAir: 0,
+      newFuelSavings: 0
+    };
   }
 
   setCurrentField(str: string){

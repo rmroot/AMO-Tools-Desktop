@@ -90,16 +90,16 @@ export class FlueGasMaterialComponent implements OnInit {
   }
 
   setHHV() {
-    let tmpHeatingVals = this.phastService.flueGasByVolumeCalculateHeatingValue(this.newMaterial);
-    if (isNaN(tmpHeatingVals.heatingValue) == false && isNaN(tmpHeatingVals.specificGravity) == false) {
+    // let tmpHeatingVals = this.phastService.flueGasByVolumeCalculateHeatingValue(this.newMaterial);
+    // if (isNaN(tmpHeatingVals.heatingValue) == false && isNaN(tmpHeatingVals.specificGravity) == false) {
+    //   this.isValid = true;
+    //   this.newMaterial.heatingValue = tmpHeatingVals.heatingValue;
+    //   this.newMaterial.specificGravity = tmpHeatingVals.specificGravity;
+    // } else {
       this.isValid = true;
-      this.newMaterial.heatingValue = tmpHeatingVals.heatingValue;
-      this.newMaterial.specificGravity = tmpHeatingVals.specificGravity;
-    } else {
-      this.isValid = false;
       this.newMaterial.heatingValue = 0;
       this.newMaterial.specificGravity = 0;
-    }
+    // }
   }
 
   checkMaterialName() {

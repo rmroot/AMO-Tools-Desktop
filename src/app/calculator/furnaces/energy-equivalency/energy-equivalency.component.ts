@@ -32,11 +32,11 @@ export class EnergyEquivalencyComponent implements OnInit {
   }
 
   calculateFuel() {
-    this.energyEquivalencyFuelOutput = this.phastService.energyEquivalencyFuel(this.energyEquivalencyFuel);
+    // this.energyEquivalencyFuelOutput = this.phastService.energyEquivalencyFuel(this.energyEquivalencyFuel);
   }
 
   calculateElectric() {
-    this.energyEquivalencyElectricOutput = this.phastService.energyEquivalencyElectric(this.energyEquivalencyElectric);
+    // this.energyEquivalencyElectricOutput = this.phastService.energyEquivalencyElectric(this.energyEquivalencyElectric);
   }
 
   setCurrentField(str: string) {
