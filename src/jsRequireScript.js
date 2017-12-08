@@ -7,13 +7,13 @@
 //     //var packageJson = require('../package.json');
 // })
 
-require.config({
-    paths: {
-        'dbPath': '../node_modules/amo-tools-suite/build/Release/db.node'
-    }
-});
+// require.config({
+//     paths: {
+//         'dbPath': '../node_modules/amo-tools-suite/build/Release/db.node'
+//     }
+// });
 
-require(['require', 'dbPath'], function (require) {
-    var db = require('dbPath')
-    console.log(db);
-})
+// require(['require', 'dbPath'], function (require) {
+//     var db = require('dbPath')
+//     console.log(db);
+//})
