@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { PHAST, Losses, Modification } from '../../shared/models/phast/phast';
 import { Settings } from '../../shared/models/settings';
+
 import * as _ from 'lodash';
 import { ModalDirective } from 'ngx-bootstrap';
 import { PhastService } from '../phast.service';
@@ -19,6 +20,8 @@ export class LossesComponent implements OnInit {
   saved = new EventEmitter<boolean>();
   @Input()
   settings: Settings;
+  @Input()
+  inSetup: boolean;
 
   lossAdded: boolean;
 
@@ -40,6 +43,7 @@ export class LossesComponent implements OnInit {
 
   isModalOpen: boolean = false;
   showAddBtn: boolean = true;
+  toggleCalculate: boolean = false;
   constructor(private lossesService: LossesService) { }
 
   ngOnInit() {
@@ -77,7 +81,7 @@ export class LossesComponent implements OnInit {
   }
 
   ngOnDestroy() {
-   // this.lossesService.lossesTab.next('charge-material');
+    // this.lossesService.lossesTab.next('charge-material');
   }
 
   changeField($event) {
@@ -89,6 +93,7 @@ export class LossesComponent implements OnInit {
       this.saved.emit(true);
       this.showEditModification = false;
       this.editModification = null;
+      this.toggleCalculate = !this.toggleCalculate;
     }
   }
 
@@ -139,9 +144,11 @@ export class LossesComponent implements OnInit {
   }
 
   toggleDropdown() {
-    this.showEditModification = false;
-    this.isDropdownOpen = !this.isDropdownOpen;
-    this.showNotes = false;
+    if (this.modificationSelected) {
+      this.showEditModification = false;
+      this.isDropdownOpen = !this.isDropdownOpen;
+      this.showNotes = false;
+    }
   }
 
   selectModification(modification: Modification) {
@@ -158,8 +165,10 @@ export class LossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.lossAdded = true;
-    this.addLossToggle = !this.addLossToggle;
+    if (this.baselineSelected) {
+      this.lossAdded = true;
+      this.addLossToggle = !this.addLossToggle;
+    }
   }
 
   toggleNotes() {
