@@ -13,7 +13,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 1127",
     "build": "ng build",
     "build-aot": "ng build --aot",
     "build-watch": "ng build --op dist -w",
