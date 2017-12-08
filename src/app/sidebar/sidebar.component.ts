@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, SimpleChanges, ChangeDe
 import { Directory } from '../shared/models/directory';
 import { Assessment } from '../shared/models/assessment';
 import { AssessmentService } from '../assessment/assessment.service';
-declare const packageJson;
+// declare const packageJson;
 import { ElectronService } from 'ngx-electron';
 @Component({
   selector: 'app-sidebar',
@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
   constructor(private assessmentService: AssessmentService, private electronService: ElectronService) { }
 
   ngOnInit() {
-    this.versionNum = packageJson.version;
+    this.versionNum = '0.2.3';
     this.directory.collapsed = false;
     this.selectedDirectoryId = this.directory.id;
     this.assessmentService.updateAvailable.subscribe(val => {
