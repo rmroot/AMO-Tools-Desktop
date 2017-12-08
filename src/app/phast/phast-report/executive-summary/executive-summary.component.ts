@@ -20,17 +20,21 @@ export class ExecutiveSummaryComponent implements OnInit {
   @Input()
   assessment: Assessment;
   @Input()
-  inPhast: boolean; 
-  
+  inPhast: boolean;
+
   baseline: ExecutiveSummary;
 
   modifications: Array<ExecutiveSummary>;
   phastMods: Array<any>;
-  selectedModificationIndex: number = 0;
+  selectedModificationIndex: number;
   notes: Array<SummaryNote>;
+  timeUnit: string;
+  energyUnit: string;
+
   constructor(private executiveSummaryService: ExecutiveSummaryService, private reportRollupService: ReportRollupService) { }
 
   ngOnInit() {
+    this.notes = new Array();
     this.baseline = this.executiveSummaryService.getSummary(this.phast, false, this.settings, this.phast);
     this.modifications = new Array<ExecutiveSummary>();
     if (this.phast.modifications) {
@@ -39,17 +43,30 @@ export class ExecutiveSummaryComponent implements OnInit {
         let tmpSummary = this.executiveSummaryService.getSummary(mod.phast, true, this.settings, this.phast, this.baseline);
         this.modifications.push(tmpSummary);
       })
-      this.initMaxAnnualSavings();
+      // this.initMaxAnnualSavings();
       this.notes = this.executiveSummaryService.buildSummaryNotes(this.phast.modifications);
+    }
+
+    this.timeUnit = this.settings.energyResultUnit + '/yr';
+    if (this.settings.unitsOfMeasure == 'Metric') {
+      this.energyUnit = this.settings.energyResultUnit + '/kg';
+    } else if (this.settings.unitsOfMeasure == 'Imperial') {
+      this.energyUnit = this.settings.energyResultUnit + '/lb';
+    }
+
+    if (!this.inPhast) {
+      this.reportRollupService.selectedPhasts.subscribe(val => {
+        if (val) {
+          val.forEach(assessment => {
+            if (assessment.assessmentId == this.assessment.id) {
+              this.selectedModificationIndex = assessment.selectedIndex;
+            }
+          })
+        }
+      });
     }
   }
 
-  initMaxAnnualSavings() {
-    let min = _.minBy(this.modifications, 'annualCost');
-    if (min) {
-      this.selectedModificationIndex = _.findIndex(this.modifications, min);
-    }
-  }
   useModification() {
     this.reportRollupService.updateSelectedPhasts(this.assessment, this.selectedModificationIndex);
   }

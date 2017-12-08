@@ -28,17 +28,18 @@ export class PhastBarChartComponent implements OnInit {
   modificationData: any = {};
 
 
-  options: any = { }
+  options: any = {}
   @ViewChild(BaseChartDirective) private baseChart;
 
   constructor() { }
 
   ngOnInit() {
-    let units = 'Btu/lb';
-    if (this.settings.unitsOfMeasure == 'Metric') {
-      units = 'kJ/kg';
+    let units;
+    if (this.settings.energyResultUnit != 'kWh') {
+      units = this.settings.energyResultUnit + '/hr';
+    } else {
+      units = 'kW';
     }
-
     this.options = {
       legend: {
         display: false

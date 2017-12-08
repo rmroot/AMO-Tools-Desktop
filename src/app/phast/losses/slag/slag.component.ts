@@ -29,10 +29,12 @@ export class SlagComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
   _slagLosses: Array<any>;
   firstChange: boolean = true;
-
+  resultsUnit: string;
   constructor(private phastService: PhastService, private slagService: SlagService, private slagCompareService: SlagCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,6 +52,11 @@ export class SlagComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.settings.energyResultUnit != 'kWh'){
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    }else{
+      this.resultsUnit = 'kW';
+    }
     if (!this._slagLosses) {
       this._slagLosses = new Array();
     }
@@ -113,7 +120,9 @@ export class SlagComponent implements OnInit {
 
 
   addLoss() {
-    this.slagService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.slagService.addLoss(this.isBaseline);
+    }
     if (this.slagCompareService.differentArray) {
       this.slagCompareService.addObject(this.slagCompareService.differentArray.length - 1);
     }

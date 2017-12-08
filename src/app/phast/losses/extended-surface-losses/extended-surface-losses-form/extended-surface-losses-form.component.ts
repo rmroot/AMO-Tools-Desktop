@@ -27,6 +27,7 @@ export class ExtendedSurfaceLossesFormComponent implements OnInit {
   form: any;
   elements: any;
 
+  surfaceAreaError: string = null;
   firstChange: boolean = true;
   counter: any;
   temperatureError: string = null;
@@ -78,8 +79,8 @@ export class ExtendedSurfaceLossesFormComponent implements OnInit {
     if (!bool) {
       this.startSavePolling();
     }
-    if (this.lossesForm.value.surfaceEmissivity >> 1) {
-      this.emissivityError = 'Surface emissivity cannot be greater than 1';
+    if (this.lossesForm.value.surfaceEmissivity > 1 || this.lossesForm.value.surfaceEmissivity < 0) {
+      this.emissivityError = 'Surface emissivity must be between 0 and 1';
     } else {
       this.emissivityError = null;
     }
@@ -94,6 +95,11 @@ export class ExtendedSurfaceLossesFormComponent implements OnInit {
     } else {
       this.temperatureError = null;
     }
+    if (this.lossesForm.value.surfaceArea < 0) {
+      this.surfaceAreaError = 'Total Outside Surface Area must be equal or greater than 0 ';
+    } else {
+      this.surfaceAreaError= null;
+    }
   }
 
   focusField(str: string) {
@@ -102,7 +108,9 @@ export class ExtendedSurfaceLossesFormComponent implements OnInit {
   emitSave() {
     this.saveEmit.emit(true);
   }
-
+  focusOut() {
+    this.changeField.emit('default');
+  }
   startSavePolling() {
     this.checkForm();
     if (this.counter) {

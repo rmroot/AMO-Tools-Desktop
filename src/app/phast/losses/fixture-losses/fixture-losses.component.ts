@@ -29,7 +29,9 @@ export class FixtureLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
+  resultsUnit: string;
   _fixtureLosses: Array<any>;
   firstChange: boolean = true;
   constructor(private phastService: PhastService, private fixtureLossesService: FixtureLossesService, private fixtureLossesCompareService: FixtureLossesCompareService) { }
@@ -48,6 +50,11 @@ export class FixtureLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
     if (!this._fixtureLosses) {
       this._fixtureLosses = new Array();
     }
@@ -110,7 +117,9 @@ export class FixtureLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.fixtureLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.fixtureLossesService.addLoss(this.isBaseline);
+    }
     if (this.fixtureLossesCompareService.differentArray) {
       this.fixtureLossesCompareService.addObject(this.fixtureLossesCompareService.differentArray.length - 1);
     }

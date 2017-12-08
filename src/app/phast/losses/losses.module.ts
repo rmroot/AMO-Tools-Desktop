@@ -19,8 +19,7 @@ import { CoolingLossesModule } from "./cooling-losses/cooling-losses.module";
 import { ChargeMaterialModule } from './charge-material/charge-material.module';
 
 import { LossesComponent } from './losses.component';
-import { LossesSidebarComponent } from './losses-sidebar/losses-sidebar.component';
-import { LossesTabsComponent } from './losses-tabs/losses-tabs.component';
+
 
 import { NotesComponent } from './notes/notes.component';
 import { LossesHelpComponent } from './losses-help/losses-help.component';
@@ -51,6 +50,7 @@ import { HeatSystemEfficiencyModule } from './heat-system-efficiency/heat-system
 import { HeatSystemEfficiencyHelpComponent } from './losses-help/heat-system-efficiency-help/heat-system-efficiency-help.component';
 import { OperationsModule } from './operations/operations.module';
 import { OperationsHelpComponent } from './losses-help/operations-help/operations-help.component';
+import { LossesSplashPageComponent } from './losses-splash-page/losses-splash-page.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -79,8 +79,6 @@ import { OperationsHelpComponent } from './losses-help/operations-help/operation
   ],
   declarations: [
     LossesComponent,
-    LossesSidebarComponent,
-    LossesTabsComponent,
     NotesComponent,
     LossesHelpComponent,
     AtmosphereLossesHelpComponent,
@@ -100,7 +98,8 @@ import { OperationsHelpComponent } from './losses-help/operations-help/operation
     EnergyInputHelpComponent,
     EnergyInputExhaustGasLossesHelpComponent,
     HeatSystemEfficiencyHelpComponent,
-    OperationsHelpComponent
+    OperationsHelpComponent,
+    LossesSplashPageComponent
   ],
   providers: [
     LossesService

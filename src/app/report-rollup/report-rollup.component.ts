@@ -23,10 +23,12 @@ export class ReportRollupComponent implements OnInit {
 
   assessmentsGathered: boolean = false;
   isSummaryVisible: boolean = true;
+  createdDate: Date;
   constructor(private reportRollupService: ReportRollupService,
     private windowRefService: WindowRefService) { }
 
   ngOnInit() {
+    this.createdDate = new Date();
     this.reportRollupService.reportAssessments.subscribe(assesments => {
       this._reportAssessments = assesments;
       this.focusedAssessment = this._reportAssessments[0];
@@ -34,6 +36,10 @@ export class ReportRollupComponent implements OnInit {
     setTimeout(() => {
       this.assessmentsGathered = true;
     }, 2000)
+  }
+
+  ngOnDestroy() {
+    this.reportRollupService.initSummary();
   }
 
   exportToCsv() {

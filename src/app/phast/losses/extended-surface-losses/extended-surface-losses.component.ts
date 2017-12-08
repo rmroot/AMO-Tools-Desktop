@@ -29,9 +29,11 @@ export class ExtendedSurfaceLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
   _surfaceLosses: Array<any>;
   firstChange: boolean = true;
+  resultsUnit: string;
   constructor(private phastService: PhastService, private extendedSurfaceLossesService: ExtendedSurfaceLossesService, private extendedSurfaceCompareService: ExtendedSurfaceCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -60,6 +62,12 @@ export class ExtendedSurfaceLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._surfaceLosses) {
       this._surfaceLosses = new Array();
     }
@@ -110,7 +118,9 @@ export class ExtendedSurfaceLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.extendedSurfaceLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.extendedSurfaceLossesService.addLoss(this.isBaseline);
+    }
     if (this.extendedSurfaceCompareService.differentArray) {
       this.extendedSurfaceCompareService.addObject(this.extendedSurfaceCompareService.differentArray.length - 1);
     }

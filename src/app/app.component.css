@@ -128,6 +128,29 @@ Buttons
   background-color: #F5B7B1;
 }
 
+
+/*
+Badges
+=============================================== */
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: italic;
+  padding: 3px 3px;
+  border-radius: 2px;
+}
+  .gray-badge {
+    color: #000;
+    background-color: #eaeaea;
+  }
+
+.required-asterisk {
+  color: #ff0000;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 /*
 Forms
 =============================================== */
@@ -332,7 +355,23 @@ Pump Fluid CSS
 =============================================== */
 /**/
 
-
+canvas {
+  display: block;
+  float: left;
+  height: 30px !important;
+  width: 30px !important;
+  margin: 0px 5px 0 0;
+}
+app-nema-energy-efficiency-graph canvas {
+    height: 250px !important;
+    width: 250px !important;
+}
+app-nema-energy-efficiency-graph h1 {
+    position: absolute;
+    top: 123px;
+    left: 112px;
+    font-size: 30px !important;
+}
 
 /*
 In-Assessment Calculators
@@ -422,8 +461,13 @@ Modals
 .modal h3 {
   font-size: 22px;
   margin-bottom: 0;
+  width: 100%;
 }
 
+.close:hover{
+  font-weight: bold;
+  cursor: pointer;
+}
 
 
 
@@ -505,7 +549,7 @@ Reports
     }
 
 .assessment-report.report-in-psat .assessment-name, 
-.assessment-report.report-in-rollup .assessment-name {
+.assessment-report.report-in-rollup.report-in-psat .assessment-name {
     background-image: url('../assets/images/ico-psat-diagram.png');
     background-repeat: no-repeat;
     background-position: left center;
@@ -513,7 +557,7 @@ Reports
     padding: 9px 0 0px 48px;
 }
 .assessment-report.report-in-phast .assessment-name, 
-.assessment-report.report-in-rollup .assessment-name {
+.assessment-report.report-in-rollup.report-in-phast .assessment-name {
     background-image: url('../assets/images/ico-phast-diagram.png');
     background-repeat: no-repeat;
     background-position: left center;
@@ -793,9 +837,6 @@ Sidebar
     padding-bottom: 15px;
     height: 100vh;
     background-color: #ececec;
-}
-.dashboard-page {
-  margin-top: 4%;
 }
 
 .doe-logo {
@@ -1293,9 +1334,9 @@ Tabs
   .tabs.primary.psat li:nth-child(-n+2) a {
     border-top: #00315d solid 4px;
   }
-  .tabs.primary.phast li:nth-child(-n+2) a {
+  /*.tabs.primary.phast li:nth-child(-n+2) a {
     border-top: #611f00 solid 4px;
-  }
+  }*/
 .tabs.primary a {
   padding: 14px 10px;
   font-size: 14px;
@@ -1882,18 +1923,19 @@ Toasty Overrides ================================= */
 
   .output-summary {
     margin-bottom: 20px;
+    page-break-inside: avoid;
   }
 
   .output-summary table td {
     font-size: 11px;
     padding: 0px 8px;
+    vertical-align: middle;
   }
 
   .assessment-report {
       background: #fff;
       box-shadow: none;
       border: none;
-      page-break-before: always;
   }
 
   .assessment-report.report-in-psat .assessment-name, 
@@ -1906,6 +1948,7 @@ Toasty Overrides ================================= */
         display: block;
         width: 100%;
         text-align: center;
+        page-break-after: always;
     }
     .doe-logo {
         width: 200px;

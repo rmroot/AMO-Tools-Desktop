@@ -29,10 +29,11 @@ export class OpeningLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
   _openingLosses: Array<any>;
   firstChange: boolean = true;
-
+  resultsUnit: string;
   constructor(private phastService: PhastService, private openingLossesService: OpeningLossesService, private openingLossesCompareService: OpeningLossesCompareService) { }
 
 
@@ -50,6 +51,12 @@ export class OpeningLossesComponent implements OnInit {
     }
   }
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._openingLosses) {
       this._openingLosses = new Array();
     }
@@ -112,7 +119,9 @@ export class OpeningLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.openingLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.openingLossesService.addLoss(this.isBaseline);
+    }
     if (this.openingLossesCompareService.differentArray) {
       this.openingLossesCompareService.addObject(this.openingLossesCompareService.differentArray.length - 1);
     }

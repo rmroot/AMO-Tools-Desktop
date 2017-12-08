@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ElectronService } from 'ngx-electron';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
@@ -12,8 +12,7 @@ import { AssessmentService } from '../assessment/assessment.service';
 })
 
 export class CoreComponent implements OnInit {
-  updateAvailable: boolean;
-  updateSelected: boolean;
+  showUpdateModal: boolean;
 
   @ViewChild('updateModal') public updateModal: ModalDirective;
 
@@ -22,7 +21,7 @@ export class CoreComponent implements OnInit {
 
   showScreenshot: boolean = true;
   constructor(private electronService: ElectronService, private toastyService: ToastyService,
-    private toastyConfig: ToastyConfig, private importExportService: ImportExportService, private assessmentService: AssessmentService) {
+    private toastyConfig: ToastyConfig, private importExportService: ImportExportService, private assessmentService: AssessmentService, private changeDetectorRef: ChangeDetectorRef) {
     this.toastyConfig.theme = 'bootstrap';
     this.toastyConfig.limit = 1;
   }
@@ -49,7 +48,6 @@ export class CoreComponent implements OnInit {
     //   this.showScreenshot = false;
     // }
   }
-
 
   takeScreenShot() {
     this.importExportService.takeScreenShot();
@@ -81,22 +79,8 @@ export class CoreComponent implements OnInit {
     this.importExportService.openMailTo();
   }
 
-  showUpdateModal() {
-    this.updateModal.show();
+  closeModal() {
+    this.showUpdateModal = false;
   }
 
-  hideUpdateModal() {
-    this.updateModal.hide();
-  }
-
-  updateClick() {
-    this.updateSelected = true;
-    this.updateAvailable = false;
-    this.electronService.ipcRenderer.send('update', null);
-  }
-
-  cancel() {
-    this.updateModal.hide();
-    this.electronService.ipcRenderer.send('later', null);
-  }
 }

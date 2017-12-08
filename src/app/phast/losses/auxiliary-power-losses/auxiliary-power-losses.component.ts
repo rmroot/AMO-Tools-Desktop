@@ -5,6 +5,7 @@ import { AuxiliaryPowerLoss } from '../../../shared/models/phast/losses/auxiliar
 import { Losses } from '../../../shared/models/phast/phast';
 import { AuxiliaryPowerLossesService } from './auxiliary-power-losses.service';
 import { AuxiliaryPowerCompareService } from './auxiliary-power-compare.service';
+import { Settings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-auxiliary-power-losses',
@@ -26,7 +27,12 @@ export class AuxiliaryPowerLossesComponent implements OnInit {
   fieldChange = new EventEmitter<string>();
   @Input()
   isBaseline: boolean;
+  @Input()
+  settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
+  resultsUnit: string;
   _auxiliaryPowerLosses: Array<any>;
   firstChange: boolean = true;
   constructor(private phastService: PhastService, private auxiliaryPowerLossesService: AuxiliaryPowerLossesService, private auxiliaryPowerCompareService: AuxiliaryPowerCompareService) { }
@@ -46,6 +52,11 @@ export class AuxiliaryPowerLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
     if (!this._auxiliaryPowerLosses) {
       this._auxiliaryPowerLosses = new Array();
     }
@@ -107,7 +118,9 @@ export class AuxiliaryPowerLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.auxiliaryPowerLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.auxiliaryPowerLossesService.addLoss(this.isBaseline);
+    }
     if (this.auxiliaryPowerCompareService.differentArray) {
       this.auxiliaryPowerCompareService.addObject(this.auxiliaryPowerCompareService.differentArray.length - 1);
     }
@@ -153,6 +166,10 @@ export class AuxiliaryPowerLossesComponent implements OnInit {
 
   changeField(str: string) {
     this.fieldChange.emit(str);
+  }
+
+  focusOut() {
+    this.fieldChange.emit('default');
   }
 
   setCompareVals() {

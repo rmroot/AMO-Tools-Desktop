@@ -16,7 +16,10 @@
           &mdash; &mdash;
         </td>
         <td class="percent-graph">
-          <app-percent-graph [value]="percentSavings" [valueDescription]="'Percent Savings'" [unit]="'%'"></app-percent-graph>
+          <div class="col-8 graph-col" *ngIf="percentSavings">
+            <app-percent-graph [value]="percentSavings" [valueDescription]="'Percent Savings'" [unit]="'%'"></app-percent-graph>
+          </div>
+          <div *ngIf="!percentSavings">&mdash; &mdash;</div>
         </td>
       </tr>
       <tr>
@@ -77,22 +80,24 @@
       </tr>
       <tr>
         <th>Annual Cost</th>
-        <th>{{baselineResults.annual_cost | currency:'USD':true:'2.0-0'}}</th>
-        <th *ngIf="modificationResults.annual_cost" [ngClass]="{'positive-savings': percentSavings > 10}">{{modificationResults.annual_cost | currency:'USD':true:'2.0-0'}}</th>
+        <th>{{baselineResults.annual_cost | currency:'USD':'symbol':'2.0-0'}}</th>
+        <th *ngIf="modificationResults.annual_cost" [ngClass]="{'positive-savings': percentSavings > 10}">{{modificationResults.annual_cost | currency:'USD':'symbol':'2.0-0'}}</th>
         <td *ngIf="!modificationResults.annual_cost">&mdash;</td>
       </tr>
       <tr>
         <th>Annual Savings</th>
         <th>&mdash;</th>
         <th *ngIf="annualSavings" [ngClass]="{'positive-savings': percentSavings > 10}">
-          {{annualSavings | currency:'USD':true:'2.0-0'}}
+          {{annualSavings | currency:'USD':'symbol':'2.0-0'}}
         </th>
         <td *ngIf="!annualSavings">&mdash;</td>
       </tr>
       <tr *ngIf="psat.modifications[exploreModIndex].psat.inputs.optimize_calculation">
         <td></td>
         <td></td>
-        <td><span class="text-muted">*Optimized</span></td>
+        <td>
+          <span class="text-muted">*Optimized</span>
+        </td>
       </tr>
     </tbody>
   </table>

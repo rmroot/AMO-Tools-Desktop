@@ -28,13 +28,21 @@ export class FlueGasLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
   _flueGasLosses: Array<any>;
   firstChange: boolean = true;
-
+  resultsUnit: string;
   constructor(private phastService: PhastService, private flueGasLossesService: FlueGasLossesService, private flueGasCompareService: FlueGasCompareService) { }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
+
     if (!this._flueGasLosses) {
       this._flueGasLosses = new Array();
     }
@@ -135,7 +143,9 @@ export class FlueGasLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.flueGasLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.flueGasLossesService.addLoss(this.isBaseline);
+    }
     if (this.flueGasCompareService.differentArray) {
       this.flueGasCompareService.addObject(this.flueGasCompareService.differentArray.length - 1);
     }
@@ -163,7 +173,7 @@ export class FlueGasLossesComponent implements OnInit {
   }
 
   calculate(loss: any) {
-    let sumAdditionalHeat = this.phastService.sumChargeMaterialExothermic(this.losses.chargeMaterials);
+    let sumAdditionalHeat = this.phastService.sumChargeMaterialExothermic(this.losses.chargeMaterials, this.settings);
     if (loss.measurementType == "By Volume") {
       if (loss.formByVolume.status == 'VALID') {
         let tmpLoss: FlueGasByVolume = this.flueGasLossesService.buildByVolumeLossFromForm(loss.formByVolume);
@@ -219,7 +229,9 @@ export class FlueGasLossesComponent implements OnInit {
   changeField(str: string) {
     this.fieldChange.emit(str);
   }
-
+  focusOut() {
+    this.fieldChange.emit('default');
+  }
   setCompareVals() {
     if (this.isBaseline) {
       this.flueGasCompareService.baselineFlueGasLoss = this.losses.flueGasLosses;

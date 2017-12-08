@@ -20,7 +20,7 @@
       <div class="form-section">
         <div class="form-group">
           <label class="small" for="type">Select Type</label>
-          <select class="form-control" id="type" [(ngModel)]="material.chargeMaterialType" [disabled]="!baselineSelected" (focus)="changeField('chargeMaterialType')">
+          <select class="form-control" id="type" [(ngModel)]="material.chargeMaterialType" [disabled]="!baselineSelected" (focus)="changeField('chargeMaterialType')" (blur)="focusOut()">
             <option>Solid</option>
             <option>Liquid</option>
             <option>Gas</option>
@@ -43,9 +43,7 @@
       <div class="form-group">
         <label class="small">Total Heat Required For Charge Material</label>
         <div *ngIf="material.heatRequired" class="text-center small">
-          {{material.heatRequired | number:'2.0-0'}}
-          <span *ngIf="settings.unitsOfMeasure == 'Imperial'">Btu/hr</span>
-          <span *ngIf="settings.unitsOfMeasure == 'Metric'">kJ/hr</span>
+          {{material.heatRequired | sigFigs:'5'}} <span>{{resultsUnit}}</span>
         </div>
         <div *ngIf="!material.heatRequired" class="text-center small">
           &mdash; &mdash;

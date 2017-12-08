@@ -29,10 +29,11 @@ export class ExhaustGasComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
   _exhaustGasLosses: Array<any>;
   firstChange: boolean = true;
-
+  resultsUnit: string;
   constructor(private phastService: PhastService, private exhaustGasService: ExhaustGasService, private exhaustGasCompareService: ExhaustGasCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,6 +51,11 @@ export class ExhaustGasComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
     if (!this._exhaustGasLosses) {
       this._exhaustGasLosses = new Array();
     }
@@ -111,7 +117,9 @@ export class ExhaustGasComponent implements OnInit {
     this.exhaustGasService.deleteLossIndex.next(null);
   }
   addLoss() {
-    this.exhaustGasService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.exhaustGasService.addLoss(this.isBaseline);
+    }
     if (this.exhaustGasCompareService.differentArray) {
       this.exhaustGasCompareService.addObject(this.exhaustGasCompareService.differentArray.length - 1);
     }

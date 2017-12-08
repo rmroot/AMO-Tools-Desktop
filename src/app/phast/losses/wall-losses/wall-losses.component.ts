@@ -29,9 +29,12 @@ export class WallLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
+  @Input()
+  isLossesSetup: boolean;
 
   _wallLosses: Array<any>;
   firstChange: boolean = true;
+  resultsUnit: string
   constructor(private phastService: PhastService, private wallLossesService: WallLossesService, private wallLossCompareService: WallLossCompareService, private windowRefService: WindowRefService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -51,6 +54,11 @@ export class WallLossesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.settings.energyResultUnit != 'kWh'){
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    }else{
+      this.resultsUnit = 'kW';
+    }
     //initialize component data array
     //_wallLosses is array of objects that is used by wall-losses.component
     if (!this._wallLosses) {
@@ -127,7 +135,9 @@ export class WallLossesComponent implements OnInit {
 
   addLoss() {
     //if adding loss in modification signal to baseline to add loss
-    this.wallLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.wallLossesService.addLoss(this.isBaseline);
+    }
     //check compare service objects has been initialized
     //have modify conditions view call so that it isn't called twice => (!this.isBaseline)
     if (this.wallLossCompareService.differentArray) {

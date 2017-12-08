@@ -3,7 +3,7 @@ import { MeteredEnergyFuel } from '../../../../shared/models/phast/meteredEnergy
 import { SuiteDbService } from '../../../../suiteDb/suite-db.service';
 import { FlueGasMaterial } from '../../../../shared/models/materials';
 import { Settings } from '../../../../shared/models/settings';
-
+import { ConvertPhastService } from '../../../convert-phast.service';
 @Component({
   selector: 'app-metered-fuel-form',
   templateUrl: './metered-fuel-form.component.html',
@@ -23,10 +23,22 @@ export class MeteredFuelFormComponent implements OnInit {
   fuelTypes: FlueGasMaterial[];
   fuelFlowInput: boolean;
   counter: any;
-  constructor(private suiteDbService: SuiteDbService) { }
+  constructor(private suiteDbService: SuiteDbService, private convertPhastService: ConvertPhastService) { }
 
   ngOnInit() {
-    this.fuelTypes = this.suiteDbService.selectGasFlueGasMaterials();
+    this.getFuelTypes(true);
+  }
+
+  getFuelTypes(bool?: boolean) {
+    if (this.inputs.fuelDescription == 'gas') {
+      this.fuelTypes = this.suiteDbService.selectGasFlueGasMaterials();
+    } else if (this.inputs.fuelDescription == 'solidLiquid') {
+      this.fuelTypes = this.suiteDbService.selectSolidLiquidFlueGasMaterials();
+    }
+    if(!bool){
+      this.inputs.fuelType = undefined;
+      this.inputs.heatingValue = 0;
+    }
   }
 
   focusField(str: string) {
@@ -37,6 +49,9 @@ export class MeteredFuelFormComponent implements OnInit {
   }
   setProperties() {
     let fuel = this.suiteDbService.selectGasFlueGasMaterialById(this.inputs.fuelType);
+    if (this.settings.unitsOfMeasure == 'Metric') {
+      fuel.heatingValue = this.convertPhastService.convertVal(fuel.heatingValue, 'btuSCF', 'kJNm3');
+    }
     this.inputs.heatingValue = fuel.heatingValue;
     this.calculate();
   }

@@ -29,11 +29,12 @@ export class GasLeakageLossesComponent implements OnInit {
   isBaseline: boolean;
   @Input()
   settings: Settings;
-
+  @Input()
+  isLossesSetup: boolean;
 
   _leakageLosses: Array<any>;
   firstChange: boolean = true;
-
+  resultsUnit: string;
   constructor(private gasLeakageLossesService: GasLeakageLossesService, private phastService: PhastService, private gasLeakageCompareService: GasLeakageCompareService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,6 +51,11 @@ export class GasLeakageLossesComponent implements OnInit {
     }
   }
   ngOnInit() {
+    if (this.settings.energyResultUnit != 'kWh') {
+      this.resultsUnit = this.settings.energyResultUnit + '/hr';
+    } else {
+      this.resultsUnit = 'kW';
+    }
     if (!this._leakageLosses) {
       this._leakageLosses = new Array<any>();
     }
@@ -112,7 +118,9 @@ export class GasLeakageLossesComponent implements OnInit {
   }
 
   addLoss() {
-    this.gasLeakageLossesService.addLoss(this.isBaseline);
+    if (this.isLossesSetup) {
+      this.gasLeakageLossesService.addLoss(this.isBaseline);
+    }
     if (this.gasLeakageCompareService.differentArray) {
       this.gasLeakageCompareService.addObject(this.gasLeakageCompareService.differentArray.length - 1);
     }

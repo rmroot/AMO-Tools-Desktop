@@ -32,7 +32,8 @@ export class FixtureLossesFormComponent implements OnInit {
   @ViewChild('lossForm') lossForm: ElementRef;
   form: any;
   elements: any;
-
+  specificHeatError: string = null;
+  feedRateError: string = null;
   firstChange: boolean = true;
   counter: any;
   materials: Array<any>;
@@ -60,8 +61,7 @@ export class FixtureLossesFormComponent implements OnInit {
     }
     this.initDifferenceMonitor();
   }
-
-  disableForm() {
+    disableForm() {
     this.elements = this.lossForm.nativeElement.elements;
     for (var i = 0, len = this.elements.length; i < len; ++i) {
       this.elements[i].disabled = true;
@@ -83,12 +83,31 @@ export class FixtureLossesFormComponent implements OnInit {
     this.saveEmit.emit(true);
   }
 
+  focusOut() {
+    this.changeField.emit('default');
+  }
   setSpecificHeat() {
     let tmpMaterial = this.suiteDbService.selectSolidLoadChargeMaterialById(this.lossesForm.value.materialName);
     this.lossesForm.patchValue({
       specificHeat: tmpMaterial.specificHeatSolid
     })
     this.startSavePolling();
+  }
+
+  checkInputError(bool?: boolean) {
+    if (!bool) {
+      this.startSavePolling();
+    }
+    if (this.lossesForm.value.specificHeat < 0) {
+      this.specificHeatError = 'Specific Heat must be equal or greater than 0';
+    } else {
+      this.specificHeatError = null;
+    }
+    if (this.lossesForm.value.feedRate < 0) {
+      this.feedRateError = 'Fixture Weight feed rate must be greater than 0';
+    } else {
+      this.feedRateError = null;
+    }
   }
 
   startSavePolling() {
@@ -156,7 +175,7 @@ export class FixtureLossesFormComponent implements OnInit {
         if (this.settings.unitsOfMeasure == 'Metric') {
       selectedMaterial.specificHeatSolid = this.convertUnitsService.value(selectedMaterial.specificHeatSolid).from('btulbF').to('kJkgC');
     }
-    
+
     this.lossesForm.patchValue({
       specificHeat: selectedMaterial.specificHeatSolid
     })

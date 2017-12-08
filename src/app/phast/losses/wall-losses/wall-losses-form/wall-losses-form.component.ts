@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, SimpleChanges, HostListener } from '@angular/core';
 import { WindowRefService } from '../../../../indexedDb/window-ref.service';
 import { WallLossCompareService } from '../wall-loss-compare.service';
 import { SuiteDbService } from '../../../../suiteDb/suite-db.service';
@@ -34,10 +34,13 @@ export class WallLossesFormComponent implements OnInit {
   form: any;
   elements: any;
 
+  windVelocityError: string = null;
+  surfaceAreaError: string = null;
   firstChange: boolean = true;
   counter: any;
   surfaceTmpError: string = null;
   emissivityError: string = null;
+  surfaceEmissivityError: string = null;
   surfaceOptions: Array<WallLossesSurface>;
   showModal: boolean = false;
   constructor(private windowRefService: WindowRefService, private wallLossCompareService: WallLossCompareService, private suiteDbService: SuiteDbService, private lossesService: LossesService, private convertUnitsService: ConvertUnitsService) { }
@@ -101,8 +104,8 @@ export class WallLossesFormComponent implements OnInit {
     if (!bool) {
       this.startSavePolling();
     }
-    if (this.wallLossesForm.value.surfaceEmissivity > 1) {
-      this.emissivityError = 'Surface emissivity cannot be greater than 1';
+    if (this.wallLossesForm.value.surfaceEmissivity > 1 || this.wallLossesForm.value.surfaceEmissivity < 0) {
+      this.emissivityError = 'Surface emissivity must be between 0 and 1';
     } else {
       this.emissivityError = null;
     }
@@ -112,10 +115,32 @@ export class WallLossesFormComponent implements OnInit {
   focusField(str: string) {
     this.changeField.emit(str);
   }
+  //emits to default help on blur of input elements
+  focusOut() {
+    this.changeField.emit('default');
+  }
+
   //emit to wall-losses.component to begin saving process
   emitSave() {
     this.saveEmit.emit(true);
   }
+
+  checkInputError(bool?: boolean) {
+    if (!bool) {
+      this.startSavePolling();
+    }
+    if (this.wallLossesForm.value.windVelocity < 0) {
+      this.windVelocityError = 'Wind Velocity must be equal or greater than 0';
+    } else {
+      this.windVelocityError = null;
+    }
+    if (this.wallLossesForm.value.surfaceArea < 0 ) {
+      this.surfaceAreaError = 'Total Outside Surface Area must be equal or greater than 0';
+    } else {
+      this.surfaceAreaError = null;
+    }
+  }
+
   //on input/change in form startSavePolling is called, if not called again with 3 seconds save process is triggered
   startSavePolling() {
     this.calculate.emit(true);
