@@ -5,7 +5,7 @@ import { PSAT, PsatInputs, PsatOutputs, PsatCalcResults, PsatOutputsExistingOpti
 import { Settings } from '../shared/models/settings';
 import { ConvertUnitsService } from '../shared/convert-units/convert-units.service';
 import { ValidationService } from '../shared/validation.service';
-declare var psatAddon: any;
+// declare var psatAddon: any;
 import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class PsatService {
@@ -23,7 +23,7 @@ export class PsatService {
   }
 
   test() {
-    console.log(psatAddon);
+    // console.log(psatAddon);
   }
 
   roundVal(val: number, digits: number) {
@@ -56,7 +56,22 @@ export class PsatService {
   resultsExisting(psatInputs: PsatInputs, settings: Settings): PsatOutputs {
     psatInputs = this.convertInputs(psatInputs, settings);
     //call results existing
-    let tmpResults: PsatOutputs = psatAddon.resultsExisting(psatInputs);
+    // let tmpResults: PsatOutputs = psatAddon.resultsExisting(psatInputs);
+    let tmpResults: PsatOutputs = {
+      pump_efficiency: 50,
+      motor_rated_power: 50,
+      motor_shaft_power: 50,
+      pump_shaft_power: 50,
+      motor_efficiency: 50,
+      motor_power_factor: 50,
+      motor_current: 50,
+      motor_power: 50,
+      annual_energy: 50,
+      annual_cost: 50,
+      annual_savings_potential: 50,
+      optimization_rating: 50,
+      percent_annual_savings: 50
+    };
     if (settings.powerMeasurement != 'hp') {
       tmpResults = this.convertOutputs(tmpResults, settings);
     }
@@ -67,7 +82,22 @@ export class PsatService {
   resultsOptimal(psatInputs: PsatInputs, settings: Settings): PsatOutputs {
     psatInputs = this.convertInputs(psatInputs, settings);
     //call addon resultsOptimal
-    let tmpResults: PsatOutputs = psatAddon.resultsOptimal(psatInputs);
+    // let tmpResults: PsatOutputs = psatAddon.resultsOptimal(psatInputs);
+    let tmpResults: PsatOutputs = {
+      pump_efficiency: 50,
+      motor_rated_power: 50,
+      motor_shaft_power: 50,
+      pump_shaft_power: 50,
+      motor_efficiency: 50,
+      motor_power_factor: 50,
+      motor_current: 50,
+      motor_power: 50,
+      annual_energy: 50,
+      annual_cost: 50,
+      annual_savings_potential: 50,
+      optimization_rating: 50,
+      percent_annual_savings: 50
+    };
     if (settings.powerMeasurement != 'hp') {
       tmpResults = this.convertOutputs(tmpResults, settings);
     }
@@ -80,7 +110,22 @@ export class PsatService {
     let tmpInputs: any;
     tmpInputs = psatInputs;
     tmpInputs.baseline_pump_efficiency = baseline_pump_efficiency;
-    let tmpResults: PsatOutputs = psatAddon.resultsModified(tmpInputs);
+    // let tmpResults: PsatOutputs = psatAddon.resultsModified(tmpInputs);
+    let tmpResults: PsatOutputs = {
+      pump_efficiency: 50,
+      motor_rated_power: 50,
+      motor_shaft_power: 50,
+      pump_shaft_power: 50,
+      motor_efficiency: 50,
+      motor_power_factor: 50,
+      motor_current: 50,
+      motor_power: 50,
+      annual_energy: 50,
+      annual_cost: 50,
+      annual_savings_potential: 50,
+      optimization_rating: 50,
+      percent_annual_savings: 50
+    };
     if (settings.powerMeasurement != 'hp') {
       tmpResults = this.convertOutputs(tmpResults, settings);
     }
@@ -109,20 +154,65 @@ export class PsatService {
   resultsExistingAndOptimal(psatInputs: PsatInputs, settings: Settings): PsatOutputsExistingOptimal {
     psatInputs = this.convertInputs(psatInputs, settings);
 
-    let tmpResults = psatAddon.resultsExistingAndOptimal(psatInputs);
-
-    if (settings.powerMeasurement != 'hp') {
-      tmpResults.motor_rated_power[0] = this.convertUnitsService.value(tmpResults.motor_rated_power[0]).from('hp').to(settings.powerMeasurement);
-      tmpResults.motor_rated_power[1] = this.convertUnitsService.value(tmpResults.motor_rated_power[1]).from('hp').to(settings.powerMeasurement);
-
-      tmpResults.motor_shaft_power[0] = this.convertUnitsService.value(tmpResults.motor_shaft_power[0]).from('hp').to(settings.powerMeasurement);
-      tmpResults.motor_shaft_power[1] = this.convertUnitsService.value(tmpResults.motor_shaft_power[1]).from('hp').to(settings.powerMeasurement);
-
-      tmpResults.pump_shaft_power[0] = this.convertUnitsService.value(tmpResults.pump_shaft_power[0]).from('hp').to(settings.powerMeasurement);
-      tmpResults.pump_shaft_power[1] = this.convertUnitsService.value(tmpResults.pump_shaft_power[1]).from('hp').to(settings.powerMeasurement);
-
+    // let tmpResults = psatAddon.resultsExistingAndOptimal(psatInputs);
+    // let tmpResults: PsatOutputsExistingOptimal = {
+    //     pump_efficiency: [50, 50],
+    //     motor_rated_power: [50, 50],
+    //     motor_shaft_power: [50, 50],
+    //     pump_shaft_power: [50, 50],
+    //     motor_efficiency: [50, 50],
+    //     motor_power_factor: [50, 50],
+    //     motor_current: [50, 50],
+    //     motor_power: [50, 50],
+    //     annual_energy: [50, 50],
+    //     annual_cost: [50, 50],
+    //     annual_savings_potential: [50, 50],
+    //     optimization_rating: [50, 50],
+    //     percent_annual_savings: [50, 50]
+    // };
+    //
+    // if (settings.powerMeasurement != 'hp') {
+    //   tmpResults.motor_rated_power[0] = this.convertUnitsService.value(tmpResults.motor_rated_power[0]).from('hp').to(settings.powerMeasurement);
+    //   tmpResults.motor_rated_power[1] = this.convertUnitsService.value(tmpResults.motor_rated_power[1]).from('hp').to(settings.powerMeasurement);
+    //
+    //   tmpResults.motor_shaft_power[0] = this.convertUnitsService.value(tmpResults.motor_shaft_power[0]).from('hp').to(settings.powerMeasurement);
+    //   tmpResults.motor_shaft_power[1] = this.convertUnitsService.value(tmpResults.motor_shaft_power[1]).from('hp').to(settings.powerMeasurement);
+    //
+    //   tmpResults.pump_shaft_power[0] = this.convertUnitsService.value(tmpResults.pump_shaft_power[0]).from('hp').to(settings.powerMeasurement);
+    //   tmpResults.pump_shaft_power[1] = this.convertUnitsService.value(tmpResults.pump_shaft_power[1]).from('hp').to(settings.powerMeasurement);
+    //
+    // }
+    // let tmpOutputs: PsatOutputsExistingOptimal = this.parseResultsExistingOptimal(tmpResults);
+    let tmpOutputs: PsatOutputsExistingOptimal = {
+      existing: {
+        pump_efficiency: 72.5,
+        motor_rated_power: 72.5,
+        motor_shaft_power: 72.5,
+        pump_shaft_power: 72.5,
+        motor_efficiency: 72.5,
+        motor_power_factor: 72.5,
+        motor_current: 72.5,
+        motor_power: 72.5,
+        annual_energy: 72.5,
+        annual_cost: 72.5,
+        annual_savings_potential: 72.5,
+        optimization_rating: 72.5
+      },
+      optimal: {
+        pump_efficiency: 72.5,
+        motor_rated_power: 72.5,
+        motor_shaft_power: 72.5,
+        pump_shaft_power: 72.5,
+        motor_efficiency: 72.5,
+        motor_power_factor: 72.5,
+        motor_current: 72.5,
+        motor_power: 72.5,
+        annual_energy: 72.5,
+        annual_cost: 72.5,
+        annual_savings_potential: 72.5,
+        optimization_rating: 72.5
+      }
     }
-    let tmpOutputs: PsatOutputsExistingOptimal = this.parseResultsExistingOptimal(tmpResults);
     return tmpOutputs;
   }
 
@@ -211,7 +301,15 @@ export class PsatService {
       dischargeLineLossCoefficients: dischargeLineLossCoefficients
     }
 
-    let tmpResults = psatAddon.headToolSuctionTank(inputs);
+    // let tmpResults = psatAddon.headToolSuctionTank(inputs);
+    let tmpResults = {
+      differentialElevationHead: 10,
+      differentialPressureHead: 10,
+      differentialVelocityHead: 10,
+      estimatedDischargeFrictionHead: 10,
+      estimatedSuctionFrictionHead: 10,
+      pumpHead: 10
+    };
     if (settings.distanceMeasurement != 'ft') {
       tmpResults.differentialElevationHead = this.convertUnitsService.value(tmpResults.differentialElevationHead).from('ft').to(settings.distanceMeasurement);
       tmpResults.differentialPressureHead = this.convertUnitsService.value(tmpResults.differentialPressureHead).from('ft').to(settings.distanceMeasurement);
@@ -281,7 +379,15 @@ export class PsatService {
       dischargeLineLossCoefficients: dischargeLineLossCoefficients
     }
 
-    let tmpResults = psatAddon.headTool(inputs);
+    // let tmpResults = psatAddon.headTool(inputs);
+    let tmpResults = {
+      differentialElevationHead: 10,
+      differentialPressureHead: 10,
+      differentialVelocityHead: 10,
+      estimatedDischargeFrictionHead: 10,
+      estimatedSuctionFrictionHead: 10,
+      pumpHead: 10
+    };
     if (settings.distanceMeasurement != 'ft') {
       tmpResults.differentialElevationHead = this.convertUnitsService.value(tmpResults.differentialElevationHead).from('ft').to(settings.distanceMeasurement);
       tmpResults.differentialPressureHead = this.convertUnitsService.value(tmpResults.differentialPressureHead).from('ft').to(settings.distanceMeasurement);
@@ -323,7 +429,8 @@ export class PsatService {
       efficiency: efficiency,
       motor_rated_voltage: motorVoltage
     }
-    return this.roundVal(psatAddon.estFLA(inputs), 2);
+    // return this.roundVal(psatAddon.estFLA(inputs), 2);
+    return this.roundVal(225.501, 2);
 
   }
 
@@ -342,7 +449,8 @@ export class PsatService {
       pump_style: enumPumpStyle,
       specific_speed: specificSpeed
     }
-    return this.roundVal(psatAddon.achievableEfficiency(inputs), 2);
+    // return this.roundVal(psatAddon.achievableEfficiency(inputs), 2);
+    return this.roundVal(72.445, 2);
   }
 
   ///achievable pump efficiency
@@ -361,10 +469,10 @@ export class PsatService {
       pump_style: enumPumpStyle,
       flow_rate: flowRate
     }
-    let tmpResults = psatAddon.pumpEfficiency(inputs);
+    // let tmpResults = psatAddon.pumpEfficiency(inputs);
     let results = {
-      average: this.roundVal(tmpResults.average, 2),
-      max: this.roundVal(tmpResults.max, 2)
+      average: this.roundVal(75.0059, 2),
+      max: this.roundVal(99.6778, 2)
     }
     return results;
   }
@@ -397,11 +505,11 @@ export class PsatService {
       motor_rated_voltage: motorVoltage,
       motor_rated_fla: fullLoadAmps
     }
-    let tmpResults = psatAddon.motorPerformance(tmpInputs);
+    // let tmpResults = psatAddon.motorPerformance(tmpInputs);
     let results = {
-      efficiency: this.roundVal(tmpResults.efficiency, 2),
-      motor_current: this.roundVal(tmpResults.motor_current, 2),
-      motor_power_factor: this.roundVal(tmpResults.motor_power_factor, 2)
+      efficiency: this.roundVal(55.235, 2),
+      motor_current: this.roundVal(128.125, 2),
+      motor_power_factor: this.roundVal(1.5899, 2)
     }
     return results;
   }
@@ -429,7 +537,7 @@ export class PsatService {
       motor_rated_power: horsePower,
       load_factor: 1
     };
-    return this.roundVal(psatAddon.nema(tmpInputs), 2);
+    return this.roundVal(78.91249, 2);
   }
 
   //ENUM HELPERS
