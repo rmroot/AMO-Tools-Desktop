@@ -5,7 +5,7 @@ import { PSAT, PsatInputs, PsatOutputs, PsatCalcResults, PsatOutputsExistingOpti
 import { Settings } from '../shared/models/settings';
 import { ConvertUnitsService } from '../shared/convert-units/convert-units.service';
 import { ValidationService } from '../shared/validation.service';
-var psatAddon = require('amo-tools-suite/build/release/psat.node');
+declare var psatAddon: any;
 import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class PsatService {

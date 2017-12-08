@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FlueGasMaterial, GasLoadChargeMaterial, LiquidLoadChargeMaterial, SolidLiquidFlueGasMaterial, SolidLoadChargeMaterial, AtmosphereSpecificHeat, WallLossesSurface } from '../shared/models/materials';
 
-var db = require('amo-tools-suite/build/release/db.node');
+declare var db: any;
 
 
 @Injectable()
