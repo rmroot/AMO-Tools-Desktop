@@ -135,7 +135,13 @@ Badges
 }
   .gray-badge {
     color: #000;
-    background-color: #eaeaea;
+    /*background-color: #eaeaea;*/
+    background-color: tomato;
+    /*border: 1px solid;*/
+    border-bottom-right-radius: 45%;
+    border-top-left-radius: 45%;
+    padding: 5px;
+    box-shadow: 2px 2px #888888;
   }
 
 .required-asterisk {
@@ -493,7 +499,7 @@ Data Tables
   }
 
 
-/* 
+/*
 Reports
 ========================================== */
 .output-summary .table {
@@ -533,13 +539,13 @@ Reports
         padding: 10px 20px;
     }
     .report-header {
-        
+
     }
     .report-data {
         border-top: #ddd solid 1px;
     }
 
-.assessment-report.report-in-psat .assessment-name, 
+.assessment-report.report-in-psat .assessment-name,
 .assessment-report.report-in-rollup.report-in-psat .assessment-name {
     background-image: url('../assets/images/ico-psat-diagram.png');
     background-repeat: no-repeat;
@@ -547,7 +553,7 @@ Reports
     background-size: 33px;
     padding: 9px 0 0px 48px;
 }
-.assessment-report.report-in-phast .assessment-name, 
+.assessment-report.report-in-phast .assessment-name,
 .assessment-report.report-in-rollup.report-in-phast .assessment-name {
     background-image: url('../assets/images/ico-phast-diagram.png');
     background-repeat: no-repeat;
@@ -1664,8 +1670,8 @@ Toasty Overrides ================================= */
       border: none;
   }
 
-  .assessment-report.report-in-psat .assessment-name, 
-  .assessment-report.report-in-phast .assessment-name, 
+  .assessment-report.report-in-psat .assessment-name,
+  .assessment-report.report-in-phast .assessment-name,
   .assessment-report.report-in-rollup .assessment-name {
       padding-left: 0;
   }
