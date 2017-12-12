@@ -19,7 +19,8 @@ import { FlueGasByMass, FlueGasByVolume, FlueGas } from '../shared/models/phast/
 import { ExtendedSurface } from '../shared/models/phast/losses/extendedSurface';
 import { OtherLoss } from '../shared/models/phast/losses/otherLoss';
 import { EnergyInputExhaustGasLoss } from '../shared/models/phast/losses/energyInputExhaustGasLosses';
-declare var phastAddon: any;
+
+var phastAddon = require('amo-tools-suite/build/Release/phast.node');
 import { BehaviorSubject } from 'rxjs';
 import { ConvertUnitsService } from '../shared/convert-units/convert-units.service';
 import { Settings } from '../shared/models/settings';

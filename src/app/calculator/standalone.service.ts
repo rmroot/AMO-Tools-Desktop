@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-declare var standaloneAddon: any;
+//declare var standaloneAddon: any;
 import { CombinedHeatPower, CombinedHeatPowerOutput } from '../shared/models/combinedHeatPower';
-
+var standaloneAddon = require('amo-tools-suite/build/Release/standalone.node');
 
 @Injectable()
 export class StandaloneService {
