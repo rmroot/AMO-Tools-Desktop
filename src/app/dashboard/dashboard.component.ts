@@ -16,6 +16,9 @@ import { ImportExportService } from '../shared/import-export/import-export.servi
 import { WallLossesSurface, GasLoadChargeMaterial, LiquidLoadChargeMaterial, SolidLoadChargeMaterial, AtmosphereSpecificHeat, FlueGasMaterial, SolidLiquidFlueGasMaterial } from '../shared/models/materials';
 import { ReportRollupService } from '../report-rollup/report-rollup.service';
 import { SettingsService } from '../settings/settings.service';
+import { ExampleService } from '../example/example.service';
+declare const packageJson;
+import { ApplicationData } from '../shared/models/applicationData';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -53,7 +56,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(private indexedDbService: IndexedDbService, private formBuilder: FormBuilder, private assessmentService: AssessmentService, private toastyService: ToastyService,
     private toastyConfig: ToastyConfig, private jsonToCsvService: JsonToCsvService, private suiteDbService: SuiteDbService, private importExportService: ImportExportService,
-    private reportRollupService: ReportRollupService, private settingsService: SettingsService) {
+    private reportRollupService: ReportRollupService, private settingsService: SettingsService, private exampleService: ExampleService) {
     this.toastyConfig.theme = 'bootstrap';
     this.toastyConfig.position = 'bottom-right';
     this.toastyConfig.limit = 1;
@@ -140,6 +143,21 @@ export class DashboardComponent implements OnInit {
   }
 
   getData() {
+    this.indexedDbService.getApplicationData(1).then(
+      results => {
+        if(results){
+          let test = this.exampleService.checkNeedsUpdate(results.currentVersion);
+          if(test){
+            console.log('Test passed')
+            this.exampleService.updateExamples();
+            this.updateApplicationData(results);
+          }
+        }else{
+          this.exampleService.initApplicationData();
+          this.exampleService.updateExamples();
+        }
+      }
+    )
     this.indexedDbService.getDirectory(1).then(
       results => {
         if (results) {
@@ -159,6 +177,11 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
+  updateApplicationData(data: ApplicationData){
+    data.currentVersion = packageJson.version;
+  }
+
   openModal($event){
     this.isModalOpen = $event;
   }

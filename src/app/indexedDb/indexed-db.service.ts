@@ -6,11 +6,12 @@ import { Assessment } from '../shared/models/assessment';
 import { Settings } from '../shared/models/settings';
 import { WallLossesSurface, GasLoadChargeMaterial, LiquidLoadChargeMaterial, SolidLoadChargeMaterial, AtmosphereSpecificHeat, FlueGasMaterial, SolidLiquidFlueGasMaterial } from '../shared/models/materials'
 import { SuiteDbService } from '../suiteDb/suite-db.service';
+import { ApplicationData } from '../shared/models/applicationData';
 
 
 var myDb: any = {
   name: 'CrudDB',
-  version: 3,
+  version: 4,
   instance: {},
   storeNames: {
     assessments: 'assessments',
@@ -22,7 +23,8 @@ var myDb: any = {
     atmosphereSpecificHeat: 'atmosphereSpecificHeat',
     wallLossesSurface: 'wallLossesSurface',
     flueGasMaterial: 'flueGasMaterial',
-    solidLiquidFlueGasMaterial: 'solidLiquidFlueGasMaterial'
+    solidLiquidFlueGasMaterial: 'solidLiquidFlueGasMaterial',
+    applicationData: 'applicationData'
   },
   defaultErrorHandler: function (e) {
     //todo: implement error handling
@@ -145,6 +147,15 @@ export class IndexedDbService {
         if (!newVersion.objectStoreNames.contains(myDb.storeNames.solidLiquidFlueGasMaterial)) {
           console.log('creating solidLiquidFlueGasMaterial store...');
           let settingsObjStore = newVersion.createObjectStore(myDb.storeNames.solidLiquidFlueGasMaterial, {
+            autoIncrement: true,
+            keyPath: 'id'
+          })
+          settingsObjStore.createIndex('id', 'id', { unique: false });
+        }
+        //applicationData
+        if (!newVersion.objectStoreNames.contains(myDb.storeNames.applicationData)) {
+          console.log('creating applicationData store...');
+          let settingsObjStore = newVersion.createObjectStore(myDb.storeNames.applicationData, {
             autoIncrement: true,
             keyPath: 'id'
           })
@@ -799,4 +810,59 @@ export class IndexedDbService {
       }
     })
   }
+
+  //application
+  addApplicationData(applicationData: ApplicationData): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let transaction = myDb.instance.transaction([myDb.storeNames.applicationData], 'readwrite');
+      let store = transaction.objectStore(myDb.storeNames.applicationData);
+      let addRequest = store.add(applicationData);
+      myDb.setDefaultErrorHandler(addRequest, myDb);
+      addRequest.onsuccess = function (e) {
+        resolve(e.target.result);
+      }
+      addRequest.onerror = (error) => {
+        reject(error.target.result)
+      }
+    });
+  }
+
+  getApplicationData(id: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let transaction = myDb.instance.transaction([myDb.storeNames.applicationData], 'readonly');
+      let store = transaction.objectStore(myDb.storeNames.applicationData);
+      let getRequest = store.get(id);
+      myDb.setDefaultErrorHandler(getRequest, myDb);
+      getRequest.onsuccess = (e) => {
+        resolve(e.target.result);
+      }
+      getRequest.onerror = (error) => {
+        reject(error.target.result)
+      }
+    })
+  }
+
+  putApplicationData(applicationData: ApplicationData): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let transaction = myDb.instance.transaction([myDb.storeNames.applicationData], 'readwrite');
+      let store = transaction.objectStore(myDb.storeNames.applicationData);
+      let getRequest = store.get(applicationData.id);
+      getRequest.onsuccess = (event) => {
+        let tmpApplicationData: ApplicationData = event.target.result;
+        tmpApplicationData = applicationData;
+        tmpApplicationData.modifiedDate = new Date();
+        let updateRequest = store.put(tmpApplicationData);
+        updateRequest.onsuccess = (event) => {
+          resolve(event);
+        }
+        updateRequest.onerror = (event) => {
+          reject(event)
+        }
+      }
+      getRequest.onerror = (event) => {
+        reject(event);
+      }
+    })
+  }
+
 }
